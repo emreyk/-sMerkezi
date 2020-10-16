@@ -84,7 +84,7 @@ namespace MYARCH.WEB.Controllers
               
                 //var telefon = telTire;
                 //numaralar.Add(telefon);
-                //sms.gettoken("5332563356", "7304707");
+             
                 //string mesaj = "Kullanıcı adınız :" + model.kullanici_adi + " " + "Şifreniz :" + model.sifre; 
                 //string gonMesaj = Fonksiyonlar.tr2en(mesaj);
                 //string gonderimzanani = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
