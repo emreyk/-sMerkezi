@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "KasaKaydet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Kasa kaydet</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kasa adı:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kasaAdi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış tarihi</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="acilisTarihi" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış bakiyesi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="0,00" id="acilisBakiyesi">
+                                </div>
+                            </div>
+                          
+
+                            <div class="text-right">
+                                <button type="button" onclick="KasaKaydet()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+  
+
+    function KasaKaydet() {
+
+        
+
+        var kasaAdi = document.getElementById("kasaAdi").value;
+        var acilisTarihi = document.getElementById("acilisTarihi").value;
+        var acilisBakiye = document.getElementById("acilisBakiyesi").value;
+
+
+        var model = {
+            kasa_adi: kasaAdi,
+            acilis_tarihi: acilisTarihi,
+            acilis_bakiye: acilisBakiye
+        };
+       
+
+  
+
+        if (kasaAdi == '') {
+            Uyari("error", "Lütfen kaasa adını giriniz");
+            return;
+        }
+        if (acilisTarihi == '') {
+            Uyari("error", "Lütfen açılış tarihini giriniz");
+            return;
+        }
+        if (acilisBakiye == '') {
+            Uyari("error", "Lütfen açılış bakiyesini giriniz");
+            return;
+        }
+        else {
+            Kaydet("/tanimlar/KasaKaydetIslem", model, "kayıt işlemi başarılı", "/tanimlar/Kasa", "işlem sırasında bir hata meydana geldi");
+        }
+    }
+
+
+</script>
+

@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "MuhtelifGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+@model muhtelif_baslikler
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Muhtelif İşlemler Düzenle
+                            </h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Başlık adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="@Model.baslik_adi" id="baslikAdi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Para birimi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="paraBirimi" data-fouc>
+                                        <option></option>
+                                        <optgroup label="işlem türü">
+                                            <option @(Model.para_birimi == "TL" ? "selected" : "" )> TL</option>
+                                            <option @(Model.para_birimi == "USD" ? "selected" : "" )> USD</option>
+                                            <option @(Model.para_birimi == "EURO" ? "selected" : "" )> EURO</option>
+
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Toplama katılım</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="toplamaKatilim" data-fouc>
+                                        <option></option>
+                                        <optgroup label="işlem türü">
+                                            <option @(Model.toplama_katilim == "true" ? "selected" : "" )> true</option>
+                                            <option @(Model.toplama_katilim == "false" ? "selected" : "" )> false</option>
+
+
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="GuncelleIslem()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                                <button type="button" class="btn btn-danger" onclick="geriGit();">Vazgeç <i class="icon-cancel-square ml-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<script>
+        function GuncelleIslem() {
+
+
+            var baslikAdi = document.getElementById("baslikAdi").value;
+            var paraBirimi = document.getElementById("paraBirimi");
+            var paraBirimiDeger = paraBirimi.options[paraBirimi.selectedIndex].text;
+            var katilim = document.getElementById("toplamaKatilim");
+            var katilimDeger = katilim.options[katilim.selectedIndex].text;
+
+
+            if (@Model.id =='' || baslikAdi == '' || paraBirimiDeger == '' || katilimDeger == '') {
+                Uyari("Error", "Bir hata meydana geldi");
+           }
+
+        else {
+             var model = {
+                baslik_adi: baslikAdi,
+                para_birimi: paraBirimiDeger,
+                toplama_katilim: katilimDeger,
+                baslik_kodu: '@Model.baslik_kodu',
+                id:'@Model.id',
+                }
+
+             Guncelle("/Muhtelif/MuhtelifGuncelleIslem", model, "işlem başarılı","/Muhtelif/Basliklar","işlem sırasında bir hata oluştu")
+            }
+
+        }
+
+</script>
+

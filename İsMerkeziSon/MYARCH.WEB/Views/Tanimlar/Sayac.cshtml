@@ -1,0 +1,350 @@
+﻿
+@{
+    ViewBag.Title = "Sayac";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+@model dynamic
+<script>
+    $(function () {
+
+       var anaSayaclar =  @Html.Raw(Json.Encode(Model.sayaclar));
+       var bagimsizSayaclar =  @Html.Raw(Json.Encode(Model.bagimsizSayac));
+
+        var dataGrid = $("#anaSayac").dxDataGrid({
+            dataSource: anaSayaclar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+                {
+                    dataField: "sayac_adi",
+                    caption: "Sayac Adı",
+                },
+
+                {
+                    dataField: "sayac_tipi",
+                    caption: "Sayac Tipi",
+                },
+                {
+                    dataField: "tesisat_no",
+                    caption: "Tesisat No",
+                },
+                {
+                    dataField: "ortak_alan_dagilim",
+                    caption: "Ortak Alan Dağıtım Şekli",
+                },
+                {
+                    dataField: "ortak_alan_yuzde",
+                    caption: "Ortak Alan  Yüzdesi",
+                },
+                {
+                    caption: "",
+                    width: '100%',
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                    //cssClass: "text-center",
+                    cellTemplate: function (container, options) {
+                        $('<button type="button"  class="btn btn-info">Düzenle</button>').appendTo(container);
+                    }
+                }
+
+            ],
+            summary: {
+                totalItems: [{
+                    column: "sayac_adi",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+         
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Ana Sayaçlar",
+                    location: "before"
+                });
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location = "/Tanimlar/SayacKaydet ";
+
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+
+                if (data) {
+
+                    window.location = "/Tanimlar/SayacGuncelle/" + data.id;
+
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+
+                if (id != null) {
+
+                    $.ajax({
+                        url: "/Tanimlar/SayacSilKontrol/",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (response) {
+                            if (response == true) {
+
+                                Sil("/Tanimlar/SayacSil", id, "Silme işlemi başarılı", "İşlem sırasında bir hata meydana geldi")
+                            }
+                            else {
+                                Uyari("warning", "Bu ana sayaç bağımsız bölüm sayaçları ile bağlantısı olduğu için silinemez");
+
+                            }
+                        }
+                    });
+
+                
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+        var dataGrid = $("#bagimsizSayac").dxDataGrid({
+            dataSource: bagimsizSayaclar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+                {
+                    dataField: "blok_adi",
+                    caption: "Blok Adı",
+                },
+
+                {
+                    dataField: "bagimsiz_bolum",
+                    caption: "Bagimsiz Bölüm",
+                },
+                {
+                    dataField: "ana_sayac_adi",
+                    caption: "Bağlı Olduğu Ana Sayaç",
+                },
+                {
+                    dataField: "tesisat_no",
+                    caption: "Tesisat No",
+                },
+                {
+                    dataField: "ilk_okuma",
+                    caption: "İlk Okuma",
+                },
+                {
+                    dataField: "aciklama",
+                    caption: "Açiklama",
+                },
+                {
+                    caption: "",
+                    width: 120,
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                    //cssClass: "text-center",
+                    cellTemplate: function (container, options) {
+                        $('<button type="button"  class="btn btn-info">Düzenle</button>').appendTo(container);
+                    }
+                }
+
+            ],
+
+            summary: {
+                totalItems: [{
+                    column: "blok_adi",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Bağımsız Bölüm Sayaçları",
+                    location: "before"
+                });
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location = "/Tanimlar/BagimsizSayacEkle ";
+
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+
+                if (data) {
+
+                    window.location = "/Tanimlar/SayacGuncelle/" + data.id;
+
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+
+                if (id != null) {
+
+                    Sil("/Tanimlar/SayacSil", id, "Silme işlemi başarılı", "İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+    });
+
+
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="anaSayac">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="bagimsizSayac">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

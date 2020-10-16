@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewBag.Title = "FinansalTahsilatDuzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+@model MYARCH.DTO.EEntity.EFinansalTahsilatDuzenle
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Tahsilat düzenle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tarih</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="tarih" value="@Model.tarih.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            <div id="kasaForm">
+                                <div class="form-group row">
+
+                                    <label class="col-lg-2 col-form-label">Kasa</label>
+                                    <div class="col-lg-10">
+                                        <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kasa" data-fouc>
+
+                                            <optgroup label="">
+                                                @foreach (kasa kasa in ViewBag.kasalar)
+                                                {
+                                                    <option value="@kasa.id" @(ViewBag.KasaAdi == kasa.kasa_adi ? "selected" : "" )>@kasa.kasa_adi</option>
+                                                }
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="bankaForm">
+                                <div class="form-group row">
+
+                                    <label class="col-lg-2 col-form-label">Banka</label>
+                                    <div class="col-lg-10">
+                                        <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="banka" data-fouc>
+
+                                            <optgroup label="">
+                                                @foreach (banka banka in ViewBag.bankalar)
+                                                {
+                                                    <option value="@banka.id" @(ViewBag.BankaAdi == banka.banka_adi ? "selected" : "" )>@banka.banka_adi</option>
+                                                }
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Bağımsız id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="bagimsizBolum" value="@Model.bagimsiz_id">
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Hesap hareket Id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="hesapHareket" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tahsilat tutarı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tutar" value="@Model.alacak">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Para birimi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="paraBirimi" value="@Model.para_birimi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="aciklama" value="@Model.aciklama">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">kisiId</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kisi_id" value="@Model.kisi_id">
+                                </div>
+                            </div>
+
+
+                            <div class="text-right">
+                                <button type="button" onclick="TahsilatDuzenle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+    //$('input[type=radio][name=deger]').change(function () {
+
+    //    if (this.value == 'Kredi kartı') {
+    //        $('#bankaForm').show();
+    //        $('#kasaForm').hide();
+
+    //    }
+    //    if (this.value == 'Nakit') {
+    //        $('#kasaForm').show();
+    //        $('#bankaForm').hide();
+    //    }
+
+    //});
+
+    SadeceRakam("#tutar");
+    DisiableTrue("paraBirimi")
+
+    $('#tutar').keydown(function (e) {
+        if (e.keyCode == 190)
+            return false;
+    });
+
+    if ('@Model.islem' == "Kredi kartı") {
+        document.getElementById("kasaForm").style.display = "none";
+    }
+
+    if ('@Model.islem' == "Nakit") {
+        document.getElementById("bankaForm").style.display = "none";
+    }
+
+    function TahsilatDuzenle() {
+
+        var tarih = document.getElementById("tarih").value;
+        var aciklama = document.getElementById("aciklama").value;
+        var tutar = document.getElementById("tutar").value;
+        var kisiId = document.getElementById("kisi_id").value;
+
+        //var islem = document.querySelector('input[name="deger"]:checked').value;
+        var paraBirimi = document.getElementById("paraBirimi").value;
+
+        var refno = '@ViewContext.RouteData.Values["refno"]';
+
+        var kasa = document.getElementById("kasa");
+        var kasaId = kasa.options[kasa.selectedIndex].value;
+
+        var banka = document.getElementById("banka");
+        var bankaId = banka.options[banka.selectedIndex].value;
+
+        var paraBirimi = '@Model.para_birimi';
+        var bagimsizId = document.getElementById("bagimsizBolum").value;
+        var id = document.getElementById("hesapHareket").value;
+
+        if ('@Model.islem'=='Nakit') {
+            var model = {
+                tarih: tarih,
+                alacak: tutar,
+                kisi_id: kisiId,
+                aciklama: aciklama,
+                refno: refno,
+                kasa_id: kasaId,
+                para_birimi: paraBirimi,
+                islem: '@Model.islem',
+                para_birimi: paraBirimi,
+                bagimsiz_id: bagimsizId,
+                id: id,
+                tahsilat_id: '@Model.tahsilat_id',
+                borclandirma_turu : '@Model.borclandirma_turu'
+
+            };
+        }
+
+        else if ('@Model.islem' == 'Kredi kartı') {
+            var model = {
+                tarih: tarih,
+                alacak: tutar,
+                kisi_id: kisiId,
+                aciklama: aciklama,
+                refno: refno,
+                banka_id: bankaId,
+                para_birimi: paraBirimi,
+                islem: '@Model.islem',
+                para_birimi: paraBirimi,
+                bagimsiz_id: bagimsizId,
+                id: id,
+                tahsilat_id: '@Model.tahsilat_id',
+                borclandirma_turu : '@Model.borclandirma_turu'
+            };
+        }
+
+
+        if (tarih == '') {
+            Uyari("error", "Lütfen tarih  seçiniz");
+            return;
+        }
+
+        if (tutar == '') {
+            Uyari("error", "Lütfen tutar giriniz");
+            return;
+        }
+
+        if (aciklama == '') {
+            Uyari("error", "Lütfen aciklama girinz");
+            return;
+        }
+
+
+     
+        else {
+            Guncelle("/HesapHaraket/FinansalTahsilatGuncelle", model, "Güncelleme işlemi başarılı", "/HesapHaraket/TahsilatListesi", "İşlem sırasında bir hata meydana geldi")
+        }
+    }
+</script>

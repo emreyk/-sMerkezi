@@ -1,0 +1,295 @@
+﻿
+@{
+    ViewBag.Title = "Duzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using MYARCH.CORE.Entities
+
+@model  toplu_borclandir
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Toplu Boçlandır Düzenle
+                            </h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+
+                            <div class="form-group row" id="refnoForm" style="display:none">
+                                <label class="col-lg-2 col-form-label">Refno</label>
+                                <div class="col-lg-10">
+                                    <input type="text" value="@Model.refno" class="form-control" id="refno">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borç tarihi</label>
+                                <div class="col-lg-10">
+
+                                    @{
+
+                                        <input type="date" class="form-control" id="tarih" value="@Model.tarih.ToString("yyyy-MM-dd")">
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Son ödeme tarihi</label>
+                                <div class="col-lg-10">
+
+                                    @{
+
+                                        <input type="date" class="form-control" id="tarihSonOdeme" value="@Model.sonodeme_tarihi.ToString("yyyy-MM-dd")">
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kişi tipi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kisiTipi" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Kişi tipi">
+
+
+                                            @if (Model.tip == "Kat maliki")
+                                            {
+                                                <option value="katMaliki" selected>Kat maliki</option>
+                                                <option value="kiraci">Kiracı</option>
+                                            }
+
+                                            else
+                                            {
+                                                <option value="kiraci" selected>Kiracı</option>
+                                                <option value="katMaliki">Kat maliki</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borçlandırma türü</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Borçlandırma türü">
+                                           
+                                            @foreach (borc_tipleri tipler in ViewBag.borcTiperi)
+                                            {
+                                                <option value="@tipler.para_birimi" @(Model.borclandirma_turu==tipler.borclandirma_turu?"selected":"")>@tipler.borclandirma_turu</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="dagitimSekliForm">
+                                <label class="col-lg-2 col-form-label">Dağıtım Şekli</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="dagitimTuru" name="dagitimTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Daire no">
+                                            @*<option value="bbg">Bağımsız Bölümlere Göre</option>
+                                                <option value="bbe">Bağımsız Bölümlere Eşit</option>*@
+
+                                            @if (Model.dagitim_sekli == "Bağımsız Bölümlere Eşit")
+                                            {
+                                                <option value="bbe" selected>Bağımsız Bölümlere Eşit</option>
+                                                <option value="bbg">Bağımsız Bölümlere Göre</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="bbg" selected>Bağımsız Bölümlere Göre</option>
+                                                <option value="bbe">Bağımsız Bölümlere Eşit</option>
+                                            }
+
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="aciklamaForm">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="@Model.aciklama" id="aciklama">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row" id="tutarForm">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-10">
+                                    <input type="text" value="@Model.tutar" class="form-control" id="tutar">
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="KaydetIslem()">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+
+    SadeceRakam("#tutar");
+
+    var dagitim = document.getElementById("dagitimTuru");
+    var dagitimSekli = dagitim.options[dagitim.selectedIndex].text;
+
+    var dagitimSekliDeger = dagitim.options[dagitim.selectedIndex].value;
+
+    var tur = document.getElementById("borclandirmaTuru");
+    var borclandirmaTuru = tur.options[tur.selectedIndex].text;
+
+    if (dagitimSekli == "Bağımsız Bölümlere Eşit") {
+        $('#tutarForm').show();
+    }
+    else {
+        $('#tutarForm').hide();
+    }
+
+
+    $("#dagitimTuru").change(function () {
+        if (this.value == 'bbg') {
+            $('#tutarForm').hide();
+            console.log("kapat");
+
+        }
+        if (this.value == 'bbe') {
+            $('#tutarForm').show();
+            console.log("aç");
+        }
+    });
+
+
+
+    $("#borclandirmaTuru").change(function () {
+        var borclandirmaTuru = $('option:selected', this).text();
+        if (borclandirmaTuru == 'Demirbaş') {
+
+            $('#dagitimSekliForm').hide();
+        
+        }
+        if (borclandirmaTuru== 'Akaryakıt') {
+            $('#dagitimSekliForm').hide();
+            $('#tutarForm').hide();
+
+        }
+
+        if (borclandirmaTuru == 'Aidat') {
+            $('#dagitimSekliForm').show();
+        
+        }
+   
+    });
+
+    if (borclandirmaTuru == 'Akaryakıt' || borclandirmaTuru == 'Demirbaş') {
+        $('#dagitimSekliForm').hide();
+       
+    }
+
+  
+
+    function KaydetIslem() {
+
+        var dagitim = document.getElementById("dagitimTuru");
+        var dagitimSekli = dagitim.options[dagitim.selectedIndex].text;
+
+        var aciklama = document.getElementById("aciklama").value;
+
+        var kisiTip = document.getElementById("kisiTipi");
+        var tip = kisiTip.options[kisiTip.selectedIndex].text;
+
+        var tur = document.getElementById("borclandirmaTuru");
+        var borclandirmaTuru = tur.options[tur.selectedIndex].text;
+
+        var tutar = document.getElementById("tutar").value;
+
+      
+
+        var borcTarihi = document.getElementById("tarih").value;
+        var sonOdemeTarihi = document.getElementById("tarihSonOdeme").value;
+        var refno = document.getElementById("refno").value;
+
+        var model = {
+            aciklama: document.getElementById("aciklama").value,
+            dagitim_sekli: dagitimSekli,
+            tip: tip,
+            borc: tutar,
+            borclandirma_turu: borclandirmaTuru,
+            dagitim_sekli: dagitimSekli,
+            tarih: borcTarihi,
+            sonodeme_tarihi: sonOdemeTarihi,
+            refno: refno
+        };
+
+        if (model.refno != "") {
+            $.ajax({
+                url: "/TopluBorclandir/DuzenleIslem",
+                type: "POST",
+                data: model,
+                success: function (response) {
+
+                    console.log(response);
+                    if (response == "-1") {
+                        Uyari("warning", "düzenleme yapabilmek için bu borçlandırmaya ait tahsilatları silmeniz gerekmekredir");
+                        return;
+                    }
+                    if (response == true) {
+                        Uyari("success", "kayıt işlemi başarılı");
+                        setTimeout(function () {
+
+                            window.location.href = "/TopluBorclandir";
+
+                        }, 1000);
+                        return;
+                    }
+                    if (response == false) {
+                        Uyari("error", "bir düzenleme yapmadınız");
+                    }
+
+
+                }
+            });
+        } else {
+            Console.log("refno bulunamdı");
+        }
+
+        //console.log(model);
+        //Kaydet("/TopluBorclandir/DuzenleIslem", model, "Kayıt işlemi başarılı", "/TopluBorclandir", "Bir düzenleme yapmadınız")
+
+
+    }
+
+</script>
+

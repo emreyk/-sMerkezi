@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "Bloklar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model List<MYARCH.DTO.EEntity.EBlokDTO>
+
+
+
+
+<div id="blokEkle" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Blok ekle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Blok adı</label>
+                    <input type="text" class="form-control" id="blokAdi" required>
+                </div>
+                <div class="form-group">
+                    <label>Daire sayısı</label>
+                    <input type="text" class="form-control" id="daireSayisi">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="BlokKaydet()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="blokGuncelleModal" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Blok güncelle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group" style="display:none">
+                    <label>id</label>
+                    <input type="text" class="form-control" id="id">
+                </div>
+                <div class="form-group">
+                    <label>Blok Adı</label>
+                    <input type="text" class="form-control" id="blokAdiGuncelle">
+                </div>
+                <div class="form-group" style="display:none">
+                    <label>Daire Sayısı</label>
+                    <input type="text" class="form-control" id="daireSayisiGuncelle">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="BlokGuncelle()">Güncelle</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    SadeceRakam("#daireSayisi");
+    SadeceRakam("#daireSayisiGuncelle");
+
+    $(function () {
+
+       var bloklar =  @Html.Raw(Json.Encode(Model));
+        var dataGrid = $("#gridContainer").dxDataGrid({
+            dataSource: bloklar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            editing: {
+                mode: "popup",
+                allowDeleting: true,
+            },
+            columns: [
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+                {
+                    dataField: "blok_adi",
+                    caption: "Blok Adı",
+                },
+                {
+                    dataField: "daire_sayisi",
+                    caption: "Daire Sayısı",
+                },
+
+             
+                {
+                    caption: "",
+                    width: 120,
+                    allowFiltering: false,
+                    allowSorting: false,
+                }
+
+            ],
+         
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text:"Bloklar",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            $('#blokEkle').modal('show');
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+        
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                    $('#blokGuncelleModal').modal('show');
+                    $('#blokAdiGuncelle').val(data.blok_adi);
+                    $('#daireSayisiGuncelle').val(data.daire_sayisi);
+                    $('#id').val(data.id);
+                 
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+                
+                if (id != null) {
+
+                    Sil("/Tanimlar/BlokSil",id,"Silme işlemi başarılı","İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                } 
+            },
+
+
+        }).dxDataGrid("instance");
+    });
+
+
+    function BlokKaydet() {
+        var blokAdi = document.getElementById("blokAdi").value;
+        var daireSayisi = document.getElementById("daireSayisi").value;
+
+        var model = {
+            blok_adi: blokAdi,
+            daire_sayisi: daireSayisi
+        };
+
+        if (blokAdi == '') {
+            Uyari("error", "Blok adını giriniz");
+        
+        }
+
+        if (daireSayisi == '') {
+            Uyari("error", "Daire sayısını giriniz")
+        }
+
+        else {
+            Kaydet("/Tanimlar/BlokKaydet", model, "Kayıt işlemi başarılı", "/Tanimlar/Bloklar", "İşlem sırasında bir hata meydana geldi")
+         
+        }
+ 
+    }
+
+    function BlokGuncelle() {
+        var blokAdiGuncelle = document.getElementById("blokAdiGuncelle").value;
+        var daireSayisi = document.getElementById("daireSayisiGuncelle").value;
+        var id = document.getElementById("id").value;
+
+        var model = {
+            blok_adi: blokAdiGuncelle,
+            daire_sayisi: daireSayisi,
+            id: id
+        };
+
+        if (model != null || model != '') {
+            Guncelle("/Tanimlar/BlokGuncelle", model,"Güncelleme işlemi başarılı","/Tanimlar/Bloklar", "İşlem sırasında bir hata meydana geldi")
+        }
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+   
+        <div class="card">
+            <div class="demo-container">
+                <div id="gridContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

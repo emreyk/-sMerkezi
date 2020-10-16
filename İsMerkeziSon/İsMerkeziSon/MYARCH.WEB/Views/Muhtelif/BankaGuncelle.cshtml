@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "BankaGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+
+@model  muhtelif_islemler
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Muhtelif İşlemler Düzenle
+                            </h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+
+                            <div class="form-group row" id="refnoForm" style="display:none">
+                                <label class="col-lg-2 col-form-label">Refno</label>
+                                <div class="col-lg-10">
+                                    <input type="text" value="@Model.refno" class="form-control" id="refno">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem</label>
+                                <div class="col-lg-10" id="islem">
+                                    @if (Model.muhtelif_tipi == "gelir")
+                                    {
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" value="gelir" class="form-input-styled" name="deger" checked data-fouc>
+                                                Gelir
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-input-styled" value="gider" name="deger" data-fouc>
+                                                Gider
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" value="gelir" class="form-input-styled" name="deger" data-fouc>
+                                                Gelir
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-input-styled" value="gider" name="deger" checked data-fouc>
+                                                Gider
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem tarihi</label>
+                                <div class="col-lg-10">
+
+                                    @{
+
+                                        <input type="date" class="form-control" id="tarih" value="@Model.tarih">
+                                    }
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem türü</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="islemTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="işlem türü">
+                                            <option @(Model.islem_turu == "Kredi kartı" ? "selected" : "" )> Kredi kartı</option>
+                                            <option @(Model.islem_turu == "Gelen Havale" ? "selected" : "" )> Gelen Havale</option>
+                                            <option @(Model.islem_turu == "Giden Havale" ? "selected" : "" )> Giden Havale</option>
+                                            <option @(Model.islem_turu == "Giden EFT" ? "selected" : "" )> Giden EFT</option>
+                                            <option @(Model.islem_turu == "Gelen EFT" ? "selected" : "" )> Gelen EFT</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem adı</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="islemAdi" data-fouc>
+                                        <option></option>
+                                        @*@(Model.islem_adi == kasa.baslik_adi ? "selected" : "" )*@
+                                        @foreach (muhtelif_baslikler kasa in ViewBag.IslemAdlari)
+                                        {
+                                            <option @(Model.islem_adi == kasa.baslik_adi ? "selected" : "" )>@kasa.baslik_adi</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="@Model.aciklama" id="aciklama">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row" id="tutarForm">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-10">
+                                    <input type="text" value="@Model.tutar" class="form-control" id="tutar">
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+</script>
+

@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "Firma";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    // SadeceRakam("#daireSayisi");
+    //SadeceRakam("#daireSayisiGuncelle");
+
+    $(function () {
+
+
+        var firmalar =  @Html.Raw(Json.Encode(Model));
+
+        var acilisTarihi = "";
+        for (i = 0; i < firmalar.length; i++) {
+            acilisTarihi = moment(firmalar[i]["acilis_tarihi"]).format("YYYY-MM-DD");
+            firmalar[i]["acilisTarihi"] = acilisTarihi;
+        }
+
+        var dataGrid = $("#firma").dxDataGrid({
+            dataSource: firmalar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+            loadPanel: {
+                enabled: true,
+
+            },
+            columns: [
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+                {
+                    dataField: "firma_adi",
+                    caption: "Firma adı",
+                },
+                {
+                    dataField: "telefon",
+                    caption: "Telefon",
+                },
+
+                {
+                    dataField: "email",
+                    caption: "E-posta",
+                },
+                {
+                    dataField: "adres",
+                    caption: "Adres",
+                },
+                {
+                    dataField: "yetkili_kisi",
+                    caption: "Yetkili kişi",
+                },
+                {
+                    dataField: "acilisTarihi",
+                    caption: "Tarih",
+                },
+                {
+                    dataField: "acilis_bakiyesi",
+                    caption: "Bakiye",
+                },
+
+                {
+                    caption: "",
+                    width: 120,
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                
+                }
+
+            ],
+            summary: {
+                totalItems: [{
+                    column: "blok_adi",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+                toolbarItems.push({
+                    text: "Firma",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location.href = "/Tanimlar/FirmaKaydet/";
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                    window.location.href = "/Tanimlar/FirmaDuzenle/" + data.id;
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+
+                if (id != null) {
+
+                    Sil("/Tanimlar/FirmaSil",id,"Silme işlemi başarılı","İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="firma">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

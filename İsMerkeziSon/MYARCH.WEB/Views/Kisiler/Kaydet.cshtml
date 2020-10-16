@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "Kaydet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Kişi Ekle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adı soyadı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="isim">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tc:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tc">
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kullanıcı adı:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kullaniciAdi">
+                                </div>
+                            </div>*@
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon(varsayılan)</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tel1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon(ikincil)</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tel2">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">E-mail</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="ePosta">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adres</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="adres">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Meslek</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="meslek">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Öğrenim durumu</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="ogrenimDurum" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Öğrenim durumu  seçiniz">
+
+                                            <option value="hicbiri">Hiçbiri</option>
+                                            <option value="ilkokul">İlkokul</option>
+                                            <option value="ortaokul">Ortaokul</option>
+                                            <option value="lise">Lise</option>
+                                            <option value="lisans">Lisans</option>
+                                            <option value="yukseklisans">Yüksek Lisans</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Cinsiyet:</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="erkek" class="form-input-styled" name="deger" checked data-fouc>
+                                            Erkek
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="bayan" name="deger" data-fouc>
+                                            Bayan
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="KisiKaydet()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                                <button type="button" class="btn btn-danger" onclick="geriGit();">Vazgeç <i class="icon-cancel-square ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script src="~/Scriptler/Kisi/Kisi.js">
+
+
+</script>

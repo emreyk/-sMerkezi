@@ -1,0 +1,261 @@
+﻿@using MYARCH.DTO.EEntity
+
+@model EBagimsizBolumlerDTO
+
+
+@Html.Partial("_TumKisilerPartial")
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Yeni Tahsilat
+                            </h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kişi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kisi">
+                                </div>
+
+                            </div>
+                         
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Bağımsız bölüm</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="bagimsizBolum" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Daire no">
+                                            <option></option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="aciklama">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tutar">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tarih</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="tarih" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Ödeme tipi</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="Nakit" class="form-input-styled" name="deger" checked data-fouc>
+                                            Nakit
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="Kredi kartı" name="deger" data-fouc>
+                                            Kredi kartı
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="kasaForm">
+                                <div class="form-group row">
+
+                                    @Html.Partial("_KasalarPartial")
+                                </div>
+                            </div>
+                            <div id="bankaForm" style="display:none">
+                                <div class="form-group row">
+
+                                    @Html.Partial("_BankalarPartial")
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="TahsilEt()">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#kisi').click(function (e) {
+        $('#kisiListesi').modal('show');
+    });
+
+
+    $('input[type=radio][name=deger]').change(function () {
+
+        if (this.value == 'Nakit') {
+            bankaForm.style.display = "none";
+            kasaForm.style.display = "block";
+
+
+        }
+        if (this.value == 'Kredi kartı') {
+            bankaForm.style.display = "block";
+            kasaForm.style.display = "none";
+
+        }
+    });
+
+    var kisiId = '';
+    $('#kisiListesi tbody').on('click', 'button', function () {
+
+        kisiId = $(this).closest("tr").find("td:eq(0)").text();
+        var isim = $(this).closest("tr").find("td:eq(1)").text();
+
+
+        document.getElementById("kisi").value = isim
+        //document.getElementById("kisiId").value = kisiId
+
+        if (kisiId) {
+            $.ajax({
+                url: "/HesapHaraket/KisiBagimsizBolumleri/",
+                type: "POST",
+                data: { id: kisiId },
+                success: function (response) {
+                    if (response != null) {
+                        console.log(response);
+                        $('select[id="bagimsizBolum"]').empty();
+
+                        $.each(response, function (index, value) {
+                            console.log(value.blok_adi);
+                            $('select[id="bagimsizBolum"]').append('<option value="' + value.bagimsiz_id + '">' + value.blok_adi + "/" + value.daire_numarasi + '</option>');
+
+                        });
+                    }
+                    else {
+                        $('select[id="bagimsizBolum"]').empty();
+
+                    }
+                }
+            });
+        }
+        else {
+            $('select[id="bagimsizBolum"]').empty();
+        }
+        $('#kisiListesi').modal('hide');
+    });
+
+
+    function TahsilEt() {
+
+        var e = document.getElementById("kasa");
+        var ogrenimDurum = e.options[e.selectedIndex].text;
+
+        var bagimsizId = document.getElementById("bagimsizBolum").value;
+        var aciklama = document.getElementById("aciklama").value;
+
+        var islem = document.querySelector('input[name="deger"]:checked').value
+
+        var tarih = document.getElementById("tarih").value;
+
+        var kasa = document.getElementById("kasa");
+        var kasaId = kasa.options[kasa.selectedIndex].value;
+
+        var banka = document.getElementById("banka");
+        var bankaId = banka.options[banka.selectedIndex].value;
+
+        var tutar = document.getElementById("tutar").value;
+
+        if (islem == 'Nakit') {
+            var model = {
+
+                kisi_id: kisiId,
+                bagimsiz_id: bagimsizId,
+                aciklama: aciklama,
+                tarih: tarih,
+                alacak: tutar,
+                islem_turu: 'alacak dekontu',
+                islem: islem,
+                kasa_id: kasaId
+
+            };
+        }
+
+        else {
+            var model = {
+
+                kisi_id: kisiId,
+                bagimsiz_id: bagimsizId,
+                aciklama: aciklama,
+                tarih: tarih,
+                alacak: tutar,
+                islem_turu: 'alacak dekontu',
+                islem: islem,
+                banka_id: bankaId
+
+            };
+        }
+
+
+        console.log(model);
+
+        if (kisiId == '') {
+            Uyari("error", "Lütfen kişi  seçiniz");
+            return;
+        }
+
+        if (aciklama == '') {
+            Uyari("error", "Lütfen açıklama giriniz");
+            return;
+        }
+
+        if (tarih == '') {
+            Uyari("error", "Lütfen tarih seçiniz");
+            return;
+        }
+
+
+        if (tutar == '') {
+            Uyari("error", "Lütfen tutar giriniz");
+            return;
+        }
+
+        if (islem == '') {
+            Uyari("error", "Lütfen ödeme tipini");
+            return;
+        }
+
+        else {
+            Kaydet("/HesapHaraket/KaydetIslem", model, "Kayıt işlemi başarılı", "/HesapHaraket/TahsilatListesi", "İşlem sırasında bir hata meydana geldi")
+        }
+    }
+</script>

@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "BankaGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model MYARCH.CORE.Entities.banka
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Banka Guncelle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row" style="display:none;">
+                                <label class="col-lg-2 col-form-label">İd</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Banka adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="bankaAdi" value="@Model.banka_adi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Hesap adi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="hesapAdi" value="@Model.hesap_adi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Sube kodu</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="subeKodu" value="@Model.sube_kodu">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış bakiyesi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="acilisBakiyesi" value="@Model.acilis_bakiye">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İban</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="iban" value="@Model.iban">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Hesap numarası</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="hesapNumarasi" value="@Model.hesap_numarası">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Durumu</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="True" class="form-input-styled" name="deger" @(Model.durum == "True" ? "checked" : "" ) data-fouc>
+                                            Aktif
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="False" name="deger" @(Model.durum == "False" ? "checked" : "" ) data-fouc>
+                                            Pasif
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="BankaGuncelle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    function BankaGuncelle() {
+
+        var id = document.getElementById("id").value;
+        var banka_adi = document.getElementById("bankaAdi").value;
+        var hesap_adi = document.getElementById("hesapAdi").value;
+        var sube_kodu = document.getElementById("subeKodu").value;
+        var hesap_numarası = document.getElementById("hesapNumarasi").value;
+        var iban = document.getElementById("iban").value;
+      
+        var acilis_bakiye = document.getElementById("acilisBakiyesi").value;
+
+        var durum = document.querySelector('input[name="deger"]:checked').value;
+       
+
+        var model = {
+            id: id,
+            banka_adi: banka_adi,
+            hesap_adi: hesap_adi,
+            sube_kodu: sube_kodu,
+            hesap_numarası: hesap_numarası,
+            iban: iban,
+            acilis_bakiye: acilis_bakiye,
+            durum: durum
+        };
+
+       
+        if (banka_adi == '') {
+            Uyari("error", "Lütfen banka adını giriniz");
+            return;
+        }
+        if (hesap_adi == '') {
+            Uyari("error", "Lütfen hesap adını giriniz");
+            return;
+        }
+        if (sube_kodu == '') {
+            Uyari("error", "Lütfen şube kodunu giriniz");
+            return;
+        }
+        if (hesap_numarası == '') {
+            Uyari("error", "Lütfen hesap numarasını giriniz");
+            return;
+        }
+        if (iban == '') {
+            Uyari("error", "Lütfen iban numarasını giriniz");
+            return;
+        }
+        if (acilis_bakiye == '') {
+            Uyari("error", "Lütfen açiliş bakiyesini giriniz");
+            return;
+        }
+        else {
+            Guncelle("/Tanimlar/BankaGuncelleIslem", model, "Güncelleme işlemi başarılı", "/Tanimlar/Banka", "İşlem sırasında bir hata meydana geldi")
+        }
+
+    }
+</script>
+

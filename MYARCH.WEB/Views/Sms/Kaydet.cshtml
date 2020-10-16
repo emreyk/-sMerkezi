@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewBag.Title = "Kaydet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+@model  List<kisiler>
+
+<script>
+    $(function () {
+
+        var kisiler = @Html.Raw(Json.Encode(Model));
+        $("#kisiTest").dxDataGrid({
+            dataSource: kisiler,
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 10 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+                {
+                    dataField: "isim",
+                    caption: "isim",
+                },
+
+                {
+                    dataField: "tel1",
+                    caption: "Telefon",
+                },
+
+                {
+                    caption: "",
+                    width: 120,
+                    allowFiltering: false,
+                    allowSorting: false,
+                    cellTemplate: function (container, options) {
+                        $("<div />").dxButton({
+
+                            text: "seç",
+                            onClick: function (e) {
+                                var kisiId = options.data.id;
+                                var tel = options.data.tel1;
+                                $('#kisiListesi').modal('hide');
+                                $('#telefon').val(tel);
+                                $('#kisiId').val(kisiId);
+
+                             
+                                $('#telefonForm').show();
+
+                            }
+                        }).appendTo(container);
+                    }
+                }
+
+            ],
+        });
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Sms Gönder</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kişi tipi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kisiTipi" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Kişi tipi  seçiniz">
+                                            <option value="katmaliki">Kat Maliki</option>
+                                            <option value="kiraci">Kiracı</option>
+                                            <option value="kisi">Kişi</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Mesaj başlığı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="smsBaslik">
+                                </div>
+                            </div>*@
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Mesaj içerği</label>
+                                <div class="col-lg-10">
+                                    <textarea type="text" rows="5" class="form-control" id="smsIcerik"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="telefonForm" style="display:none;">
+                                <label class="col-lg-2 col-form-label">Telefon</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="telefon">
+                                </div>
+                            </div>
+                            <div class="form-group row" id="telefonForm" style="display:none">
+                                <label class="col-lg-2 col-form-label">Kisi id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kisiId">
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="Gonder()" class="btn btn-primary">Gönder <i class="icon-paperplane ml-2"></i></button>
+                                <button type="button" class="btn btn-danger" onclick="geriGit();">Vazgeç <i class="icon-cancel-square ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div id="kisiListesi" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-body">
+
+                <div id="kisiTest"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+  
+
+    var secilenDegerId;
+    $('#kisiTipi').on('change', function (e) {
+
+        secilenDegerId = $("#kisiTipi option:selected").val();
+
+
+        if (secilenDegerId == "kisi") {
+            $('#kisiListesi').modal('show');
+         
+        }
+        else {
+            $('#telefonForm').hide();
+        }
+
+    });
+
+   
+    function Gonder() {
+       
+        var icerik = $("#smsIcerik").val();
+
+     
+        if (icerik == '') {
+            Uyari("error", "Mesaj içeriğini giriniz");
+        }
+        else {
+
+            var model = {
+                tip: secilenDegerId,
+                icerik: icerik,
+                tel: $("#telefon").val(),
+                kisi_id: $("#kisiId").val(),
+            };
+
+          
+            $.ajax({
+                url: "/Sms/KaydetIslem",
+                type: "POST",
+                data: model,
+                success: function (response) {
+                    if (response == true) {
+                        Uyari("success", "İşlem başarılı");
+                    }
+
+                    else {
+                        Uyari("error", "İşlem sırasında bir hata meydana geldi");
+                      
+                    }
+                }
+            })
+        }
+    }
+</script>
+
+

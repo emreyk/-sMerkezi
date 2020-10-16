@@ -1,0 +1,17 @@
+﻿
+
+
+@using MYARCH.DTO.EEntity
+
+<div class="col-lg-9">
+    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kisi"  data-fouc>
+
+        <optgroup label="">
+            @foreach (EBagimsizDetayKisiler kisiler in ViewBag.kisiler)
+            {
+                <option value="@kisiler.kisi_id">@kisiler.isim</option>
+            }
+        </optgroup>
+
+    </select>
+</div>

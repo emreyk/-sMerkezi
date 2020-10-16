@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.Title = "KisiDuzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using MYARCH.DTO.EEntity
+
+@model EKisiDTO
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Kişi Düzenle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Kisi ıd</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adı soyadı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="isimGuncelle" value="@Model.isim">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tc:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tcGuncelle" value="@Model.tc">
+                                </div>
+                            </div>
+
+                            @*<div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Durumu:</label>
+                                    <div class="col-lg-10" id="cinsiyet">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" value="Kat maliki" class="form-input-styled" name="durumDegerGuncelle" @(Model.durumu == "Kat maliki" ? "checked" : "" ) data-fouc>
+                                                Kat maliki
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-input-styled" value="Kiracı" name="durumDegerGuncelle"  @(Model.durumu == "Kiracı" ? "checked" : "" ) data-fouc>
+                                                Kiracı
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon(varsayılan)</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tel1Guncelle" value="@Model.tel1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon(ikincil)</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tel2Guncelle" value="@Model.tel2">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">E-mail</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="ePostaGuncelle" value="@Model.eposta">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kullanıcı adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kAdi" value="@Model.kullanici_adi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Şifre</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sifre" value="@Model.sifre">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adres</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="adresGuncelle" value="@Model.adres">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Meslek</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="meslekGuncelle" value="@Model.meslek">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Öğrenim durumu</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="ogrenimDurumGuncelle" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Öğrenim durumu  seçiniz">
+
+                                            <option value="hicbiri" @(Model.ogrenim_durumu == "Hiçbiri" ? "selected" : "" )>Hiçbiri</option>
+                                            <option value="ilkokul" @(Model.ogrenim_durumu == "İlkokul" ? "selected" : "")>İlkokul</option>
+                                            <option value="ortaokul" @(Model.ogrenim_durumu == "Ortaokul" ? "selected" : "")>Ortaokul</option>
+                                            <option value="lise" @(Model.ogrenim_durumu == "Lise" ? "selected" : "")>Lise</option>
+                                            <option value="lisans" @(Model.ogrenim_durumu == "Lisans" ? "selected" : "")>Lisans</option>
+                                            <option value="yukseklisans @(Model.ogrenim_durumu == "Yüksek Lisans" ? "selected" : "" )">Yüksek Lisans</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                          
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Cinsiyet:</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="erkek" class="form-input-styled" name="deger" @(Model.cinsiyet == "erkek" ? "checked" : "" ) data-fouc>
+                                            Erkek
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="bayan" name="deger" @(Model.cinsiyet == "bayan" ? "checked" : "" ) data-fouc>
+                                            Bayan
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Durumu</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="durumu" value="@Model.durumu">
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">rutbe</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="rutbe" value="@Model.rutbe">
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="KisiGuncelle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                                <a href="/Kisiler" class="btn btn-danger">Vazgeç <i class="icon-paperplane ml-2"></i></a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function KisiGuncelle() {
+
+        var e = document.getElementById("ogrenimDurumGuncelle");
+        var ogrenimDurum = e.options[e.selectedIndex].text;
+
+        var cinsiyet = document.querySelector('input[name="deger"]:checked').value
+        //var durumu = document.querySelector('input[name="durumDegerGuncelle"]:checked').value
+
+        var model = {
+            id: document.getElementById("id").value,
+            isim: document.getElementById("isimGuncelle").value,
+            tc: document.getElementById("tcGuncelle").value,
+            tel1: document.getElementById("tel1Guncelle").value,
+            tel2: document.getElementById("tel2Guncelle").value,
+            eposta: document.getElementById("ePostaGuncelle").value,
+            adres: document.getElementById("adresGuncelle").value,
+            meslek: document.getElementById("meslekGuncelle").value,
+            ogrenim_durumu: ogrenimDurum,
+            cinsiyet: cinsiyet,
+            durumu: document.getElementById("durumu").value,
+            rutbe: document.getElementById("rutbe").value,
+            kullanici_adi: document.getElementById("kAdi").value,
+            sifre: document.getElementById("sifre").value,
+        };
+
+
+        if (document.getElementById("isimGuncelle").value == '') {
+            Uyari("error", "Lütfen kişi adını giriniz");
+            return;
+        }
+
+        if (document.getElementById("tcGuncelle").value == '') {
+            Uyari("error", "Lütfen tc numarasını giriniz");
+            return;
+        }
+        if (document.getElementById("tel1Guncelle").value == '') {
+            Uyari("error", "Lütfen varsayılan telefon numarasını giriniz");
+            return;
+        }
+        if (document.getElementById("ePostaGuncelle").value == '') {
+            Uyari("error", "Lütfen e-posta adresini giriniz");
+            return;
+        }
+        if (document.getElementById("adresGuncelle").value == '') {
+            Uyari("error", "Lütfen adresi giriniz giriniz");
+            return;
+        }
+        if (document.getElementById("meslekGuncelle").value == '') {
+            Uyari("error", "Lütfen kişinin mesleğini giriniz  giriniz");
+            return;
+        }
+
+        if (ogrenimDurum == '') {
+            Uyari("error", "Öğrenim durumunu seçiniz");
+            return;
+        }
+
+
+        else {
+            Guncelle("/Kisiler/KisiGuncelleIslem", model, "Güncelleme işlemi başarılı", "", "İşlem sırasında bir hata meydana geldi");
+        }
+
+    }
+</script>

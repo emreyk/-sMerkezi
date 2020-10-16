@@ -1,0 +1,1207 @@
+﻿@{
+    ViewBag.Title = "Detay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+@model dynamic
+<style>
+    #myProgress {
+        width: 100%;
+        background-color: #ddd;
+    }
+
+    #myBar {
+        width: 1%;
+        height: 30px;
+        background-color: #4CAF50;
+    }
+</style>
+
+<div id="progRess" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <h6 class="modal-title">Veri alınıyor</h6>
+                
+            </div>
+
+            <div class="modal-body">
+                <div id="myProgress">
+                    <div id="myBar"></div>
+                </div>
+
+                <br>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="cikisTarihi" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Çıkış</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group" style="display:none">
+                    <label>kisi id</label>
+                    <input type="text" class="form-control" id="kisiTip">
+                </div>
+                <div class="form-group" style="display:none">
+                    <label>kisi id</label>
+                    <input type="text" class="form-control" id="kisiId">
+                </div>
+                <div class="form-group">
+                    <label>Tarih</label>
+                    <input type="date" class="form-control" id="cikisTarihiId" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="CikisTarihKaydet()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+
+     var kisiler = @Html.Raw(Json.Encode(Model.kisiler));
+     var bloklar = @Html.Raw(Json.Encode(Model.detayKisiler));
+
+
+     $("#test").dxDataGrid({
+         dataSource: kisiler,
+         showBorders: true,
+         columnAutoWidth: true,
+         hoverStateEnabled: true,
+         filterRow: { visible: false, applyFilter: "auto" },
+         paging: { pageSize: 10 },
+         showColumnLines: true,
+         rowAlternationEnabled: true,
+         selection: {
+             mode: "single"
+         },
+         searchPanel: {
+             width: 350,
+             visible: true
+         },
+         //headerFilter: {
+         //    visible: true
+         //},
+
+         editing: {
+             mode: "popup",
+             //allowDeleting: true,
+         },
+
+
+         columns: [
+
+             {
+                 dataField: "id",
+                 caption: "id",
+                 visible: false,
+             },
+
+             {
+                 dataField: "isim",
+                 caption: "isim",
+             },
+
+             {
+                 dataField: "tel1",
+                 caption: "Telefon",
+
+             },
+
+             {
+                 caption: "",
+                 width: 120,
+
+                 allowFiltering: false,
+                 allowSorting: false,
+                 //cssClass: "text-center",
+                 //cellTemplate: function (container, options) {
+                 //    $('<button type="button" onclick="kisiEkle('+aa+')" class="btn btn-primary">Seç</button>').appendTo(container);
+                 //}
+                 cellTemplate: function (container, options) {
+                     $("<div />").dxButton({
+
+                         text: "seç",
+                         onClick: function (e) {
+
+                             var bagimsizId = @ViewContext.RouteData.Values["id"];
+                             var kisiId = options.data.id;
+                             var kisiAdi = options.data.isim;
+                             var bagimsizBolumId = bagimsizId;
+
+                             var girisTarihi = document.getElementById("girisTarihi").value;
+                             var hissePayi = document.getElementById("hissePayi").value;
+
+                             var e = document.getElementById("kisiTipi");
+                             var tip = e.options[e.selectedIndex].text
+
+                             //console.log(tip);
+
+                             var girisTarihi = document.getElementById("girisTarihi").value;
+                             var hissePayi = document.getElementById("hissePayi").value;
+
+                             if (tip == '') {
+                                 Uyari("error", "Lütfen kişi tipini seçiniz");
+                                 return;
+                             }
+
+                             if (girisTarihi == '') {
+                                 Uyari("error", "Lütfen giriş tarihini seçiniz");
+                                 return;
+                             }
+
+                             if (kisiId == '') {
+                                 Uyari("error", "Lütfen kişi seçiniz");
+                                 return;
+                             }
+
+
+                             var secim = $('#KatMalikiSec').is(':checked');
+
+
+                             if (tip == "Kat maliki") {
+                                 var model = {
+                                     bagimsiz_id: bagimsizBolumId,
+                                     kisi_id: kisiId,
+                                     giris_tarihi: girisTarihi,
+                                     hisse_payi: hissePayi,
+                                     tip: tip,
+                                     isim: kisiAdi,
+                                     katmaliki_id: kisiId,
+                                     oturan_katmaliki: secim
+
+                                 };
+
+                                 if (bagimsizBolumId != null) {
+                                     $.ajax({
+                                         url: "/BagimsizBolum/KatMalikiKontrol",
+                                         type: "POST",
+                                         data: { kisi_id: kisiId, bagimsiz_id: bagimsizBolumId, tip: tip },
+                                         success: function (response) {
+                                             //console.log(response);
+                                             if (response == false) {
+
+                                                 Uyari("warning", "Bu bölümün kat maliki atanmıştır");
+
+                                             }
+                                             else {
+                                                 Kaydet("/BagimsizBolum/KisiKaydet", model, "Kayıt işlemi başarılı", "/BagimsizBolum/Detay/" + bagimsizId, "İşlem sırasında bir hata meydana geldi")
+                                             }
+                                         }
+                                     });
+                                 }
+
+                             }
+
+
+                             if (tip == "Kiracı") {
+                                 var model = {
+                                     bagimsiz_id: bagimsizBolumId,
+                                     kisi_id: kisiId,
+                                     giris_tarihi: girisTarihi,
+                                     hisse_payi: hissePayi,
+                                     tip: tip,
+                                     isim: kisiAdi,
+                                     kiraci_id: kisiId
+
+                                 };
+
+                                 if (bagimsizBolumId != null) {
+                                     $.ajax({
+                                         url: "/BagimsizBolum/KiraciKontrol",
+                                         type: "POST",
+                                         data: { kisi_id: kisiId, bagimsiz_id: bagimsizBolumId, tip: tip },
+                                         success: function (response) {
+                                             console.log(response);
+
+                                             if (response == "0") {
+                                                 Uyari("warning", "önce katmaliki atamasını yapınız");
+
+                                                 return;
+                                             }
+
+                                             if (response == true) {
+                                                 Kaydet("/BagimsizBolum/KisiKaydet", model, "Kayıt işlemi başarılı", "/BagimsizBolum/Detay/" + bagimsizId, "İşlem sırasında bir hata meydana geldi");
+                                                 return;
+                                             }
+
+
+                                             if (response == false) {
+                                                 Uyari("warning", "Bu bölümün kiracısı atanmıştır");
+                                                 return ;
+                                             }
+
+                                         }
+                                     });
+
+                                 }
+                             }
+
+                         }
+
+
+                     }).appendTo(container);
+                 }
+             }
+
+
+
+         ],
+     });
+
+
+     var girisTarihi = "";
+     var cikisTarihi = "";
+
+     for (i = 0; i < bloklar.length; i++) {
+
+         girisTarihi = moment(bloklar[i]["giris_tarihi"]).format("YYYY-MM-DD");
+         bloklar[i]["girisTarihi"] = girisTarihi;
+
+         if (bloklar[i]["cikis_tarihi"] != null) {
+             cikisTarihi = moment(bloklar[i]["cikis_tarihi"]).format("YYYY-MM-DD");
+             bloklar[i]["cikisTarihi"] = cikisTarihi;
+         }
+
+         else {
+             cikisTarihi = null;
+         }
+
+     }
+
+    var dataGrid = $("#gridContainer").dxDataGrid({
+        dataSource: bloklar,
+
+        showBorders: true,
+        columnAutoWidth: true,
+        hoverStateEnabled: true,
+        filterRow: { visible: false, applyFilter: "auto" },
+        paging: { pageSize: 10 },
+        showColumnLines: true,
+        rowAlternationEnabled: true,
+        selection: {
+            mode: "single"
+        },
+
+        headerFilter: {
+            visible: true
+        },
+        searchPanel: {
+            width:350,
+            visible: true
+        },
+        editing: {
+
+          allowDeleting: true,
+        },
+        loadPanel: {
+            enabled: true,
+
+        },
+        columns: [
+
+            {
+                dataField: "kisi_id",
+                caption: "id",
+                visible: false,
+            },
+            {
+                dataField: "tip",
+                caption: "Durumu",
+
+            },
+            {
+                dataField: "isim",
+                caption: "isim",
+            },
+
+            {
+                dataField: "tel1",
+                caption: "Telefon",
+
+            },
+            {
+                dataField: "girisTarihi",
+                caption: "Giriş tarihi",
+
+            },
+
+            {
+                dataField: "cikisTarihi",
+                caption: "Çıkış tarihi",
+
+            },
+
+            {
+                dataField: "hisse_payi",
+                caption: "hisse",
+
+            },
+
+            {
+                dataField: "bakiye",
+                caption: "Bakiye",
+
+            },
+            {
+                dataField: "",
+                caption: "",
+                cellTemplate: function (container, options) {
+                    $('<div />').dxButton(
+                        {
+
+                            text: 'Çıkar',
+                            type: 'danger',
+                            height : 28,
+                            onClick: function (args) {
+                                document.getElementById("kisiId").value = options.data.kisi_id;
+                                document.getElementById("kisiTip").value = options.data.tip;
+                                $('#cikisTarihi').modal('show');
+
+                                cikarDegisken = true;
+                            }
+                        }
+                    ).appendTo(container);
+                }
+
+            },
+
+        ],
+     
+
+
+        onCellPrepared: function (e) {
+            if (e.rowType === "data" && e.column.dataField === "bakiye") {
+                e.cellElement.css("color", "#d82b2b");
+            }
+
+            if (e.rowType === "data" && (e.data.cikisTarihi != null)) {
+                e.cellElement.find(".dx-button-normal").remove();
+            }
+        },
+
+        onToolbarPreparing: function (e) {
+            var toolbarItems = e.toolbarOptions.items;
+            var searchPanel = $.grep(toolbarItems, function (item) {
+                return item.name === "searchPanel";
+            })[0];
+            searchPanel.location = "after";
+            toolbarItems.push({
+                text: "Kişiler",
+                location: "before"
+            });
+
+            toolbarItems.push({
+                widget: "dxButton",
+                options: {
+                    icon: "plus",
+                    onClick: function () {
+
+                        var bagimsizId = @ViewContext.RouteData.Values["id"];
+
+                        if (bagimsizId != '') {
+                            $.ajax({
+                                url: "/BagimsizBolum/BagimsizDetayKontrol",
+                                type: "POST",
+                                data: { bagimsiz_id: bagimsizId },
+                                success: function (response) {
+                                    if (response == true) {
+                                        $('#kisiListesi').modal('show');
+                                    }
+
+                                    else {
+                                        Uyari("warning", "Lütfen bağımsız bölüme ait özellikleri giriniz");
+                                    }
+
+                                }
+                            });
+                        }
+
+                        else {
+                            Uyari("error", "id değerine ulasılamadı");
+                        }
+
+                    },
+                    text: "Kişi ekle",
+                    height: 34,
+                    width: 130,
+                },
+                location: "before"
+            });
+        toolbarItems.push({
+            widget: "dxButton",
+            options: {
+                //icon: "plus",
+                onClick: function () {
+
+                    var bagimsizId = @ViewContext.RouteData.Values["id"];
+
+                    if (bagimsizId != '') {
+
+                        $.ajax({
+                            url: "/BagimsizBolum/Detay",
+                            type: "POST",
+                            data: { id: bagimsizId, paraBirimi: 'USD' },
+                            success: function (response) {
+                                //console.log(response);
+                                $("#gridContainer").dxDataGrid("instance").option("dataSource", response);
+
+                            }
+                        });
+                    }
+
+                    else {
+                        Uyari("error", "id değerine ulasılamadı");
+                    }
+
+                },
+                text: "Dolar Bakiye",
+                height: 30,
+                width: 130,
+            },
+            location: "before"
+        });
+        toolbarItems.push({
+            widget: "dxButton",
+            options: {
+                //icon: "plus",
+                onClick: function () {
+
+                    var bagimsizId = @ViewContext.RouteData.Values["id"];
+
+                    if (bagimsizId != '') {
+
+                        $.ajax({
+                            url: "/BagimsizBolum/Detay",
+                            type: "POST",
+                            data: { id: bagimsizId, paraBirimi: 'TL' },
+                            success: function (response) {
+                                //console.log(response);
+                                $("#gridContainer").dxDataGrid("instance").option("dataSource", bloklar);
+
+                            }
+                        });
+                    }
+
+                    else {
+                        Uyari("error", "id değerine ulasılamadı");
+                    }
+
+                },
+                text: "TL Bakiye",
+                height: 30,
+                width: 130,
+            },
+            location: "before"
+        });
+    },
+
+
+        onSelectionChanged: function (selectedItems) {
+            let data = selectedItems.selectedRowsData[0];
+
+            if (data && cikarDegisken == false) {
+
+                window.location.href = "/Kisiler/Kisi/" + data.kisi_id;
+            }
+            else {
+                cikarDegisken = false;
+            }
+        },
+
+        onRowRemoving: function (e) {
+            var bagimsizId = @ViewContext.RouteData.Values["id"];
+            var kisiId = e.data["kisi_id"];
+            var tip = e.data["tip"];
+
+
+            if (bagimsizId != "" && kisiId != "") {
+                $.ajax({
+                    url: "/BagimsizBolum/BagimsizKisiSil",
+                    type: "POST",
+                    data: { bagimsiz_id: bagimsizId, kisi_id: kisiId, tip: tip },
+                    success: function (response) {
+                        if (response == "tahsilatvar") {
+                            Uyari("warning", "düzenleme yapabilmek için kişiye ait tahsilatları silmeniz gerekmekredir");
+                            setTimeout(function () {
+
+                                window.location.href = "/BagimsizBolum/Detay/" + bagimsizId
+                            }, 2000);
+                       
+                            return;
+                        }
+                        if (response == "borcvar") {
+                            Uyari("warning", "düzenleme yapabilmek için kişiye ait borçları silmeniz gerekmekredir");
+                            setTimeout(function () {
+
+                                window.location.href = "/BagimsizBolum/Detay/" + bagimsizId
+                            }, 2000);
+                            return;
+                        }
+                        if (response == true) {
+
+                            Uyari("success", "Silme işlemi başarılı");
+                            return;
+                        }
+                        else {
+                            Uyari("error", "Hata meydana geldi");
+
+                        }
+                        console.log(response);
+                    }
+                });
+
+            }
+            else {
+                console.log("bagimsiz id veya kişi id bulunamadı");
+            }
+        },
+
+
+    }).dxDataGrid("instance");
+
+
+});
+
+</script>
+
+<div class="row">
+
+    <div class="col-xl-7">
+
+        <!-- Traffic sources -->
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h6 class="card-title">@Model.detay.blok_adi/@Model.detay.daire_numarasi</h6>
+                <div style="float:right">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="BagimsizGuncelle()">Düzenle</button>
+                    <a href="/HesapHaraket/BorcGirisi/@ViewContext.RouteData.Values["id"]" class="btn btn-success btn-sm">Borçlandır</a>
+                    @*<a href="/HesapHaraket/TahsilEt/@ViewContext.RouteData.Values["id"]" class="btn btn-light">Tahsil et</a>*@
+                    @*<a href="/HesapHaraket/PesinTahsilat/@ViewContext.RouteData.Values["id"]" class="btn btn-light">Peşin tahsilat</a>*@
+                </div>
+            </div>
+
+
+            <div class="card-body whiteboard py-0">
+                <div class="row">
+                    @*<div class="col-sm-4">
+            <div class="d-flex align-items-center justify-content-center2 mb-2">
+                <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                    <i class="icon-user-plus"></i>
+                </span>
+                <div>
+                    <div class="font-weight-semibold">Borç</div>
+                    <span class="borc">@ViewBag.Bakiye TL</span>
+                </div>
+            </div>
+            <div class="w-75 mx-auto mb-3" id="new-visitors"><svg width="130.53125" height="35"><g transform="translate(0,0)" width="130.53125"><defs><clipPath id="load-clip-new-visitors"><rect class="load-clip" width="130.53125" height="35"></rect></clipPath></defs><g clip-path="url(#load-clip-new-visitors)"><path d="M-5.0204326923076925,1.666666666666667L-4.183693910256411,4.861111111111111C-3.346955128205128,8.055555555555555,-1.673477564102564,14.444444444444443,0,18.333333333333332C1.673477564102564,22.22222222222222,3.346955128205128,23.611111111111107,5.0204326923076925,20.416666666666664C6.693910256410256,17.22222222222222,8.367387820512821,9.444444444444443,10.040865384615385,6.3888888888888875C11.714342948717949,3.333333333333333,13.387820512820513,4.999999999999999,15.061298076923077,7.6388888888888875C16.734775641025642,10.277777777777777,18.408253205128204,13.888888888888888,20.08173076923077,14.583333333333332C21.755208333333336,15.277777777777777,23.428685897435898,13.055555555555554,25.102163461538463,14.444444444444443C26.77564102564103,15.833333333333332,28.44911858974359,20.833333333333332,30.122596153846157,23.333333333333336C31.79607371794872,25.833333333333332,33.469551282051285,25.833333333333332,35.14302884615385,25.27777777777778C36.81650641025641,24.72222222222222,38.48998397435898,23.61111111111111,40.16346153846154,21.666666666666668C41.8369391025641,19.72222222222222,43.510416666666664,16.944444444444443,45.183894230769226,15.972222222222221C46.857371794871796,14.999999999999998,48.53084935897436,15.833333333333332,50.20432692307693,14.305555555555555C51.87780448717949,12.777777777777777,53.55128205128205,8.88888888888889,55.22475961538461,6.666666666666666C56.89823717948718,4.444444444444445,58.571714743589745,3.888888888888889,60.24519230769231,6.944444444444444C61.918669871794876,10,63.59214743589743,16.666666666666664,65.265625,20.27777777777778C66.93910256410257,23.888888888888886,68.61258012820512,24.444444444444443,70.2860576923077,22.083333333333332C71.95953525641025,19.72222222222222,73.63301282051282,14.444444444444443,75.30649038461537,12.777777777777777C76.97996794871794,11.11111111111111,78.65344551282051,13.055555555555555,80.32692307692308,15.277777777777779C82.00040064102564,17.5,83.6738782051282,20,85.34735576923077,21.805555555555557C87.02083333333333,23.61111111111111,88.69431089743588,24.72222222222222,90.36778846153845,22.5C92.04126602564102,20.27777777777778,93.71474358974358,14.722222222222221,95.38822115384616,10.694444444444445C97.06169871794872,6.666666666666666,98.73517628205128,4.166666666666666,100.40865384615385,3.8888888888888884C102.08213141025641,3.6111111111111107,103.75560897435898,5.5555555555555545,105.42908653846155,7.916666666666665C107.1025641025641,10.277777777777775,108.77604166666666,13.055555555555554,110.44951923076923,13.611111111111109C112.1229967948718,14.166666666666664,113.79647435897435,12.499999999999998,115.46995192307692,10.833333333333332C117.14342948717947,9.166666666666666,118.81690705128204,7.499999999999999,120.49038461538461,6.11111111111111C122.16386217948718,4.7222222222222205,123.83733974358975,3.611111111111109,125.5108173076923,6.388888888888887C127.18429487179486,9.166666666666664,128.85777243589743,15.833333333333332,130.53125,19.305555555555554C132.20472756410257,22.77777777777778,133.87820512820514,23.055555555555554,135.55168269230768,19.583333333333332C137.22516025641028,16.11111111111111,138.89863782051282,8.888888888888888,139.7353766025641,5.277777777777778L140.5721153846154,1.666666666666667" class="d3-line d3-line-medium" style="stroke: rgb(38, 166, 154); opacity: 0;" transform="translate(-5.020432472229004,0)"></path></g></g></svg></div>
+        </div>*@
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-building"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Blok Adı</div>
+                                <span class="text-muted"> @Model.detay.blok_adi</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-money"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Aidat Tutar</div>
+                                <span class="text-muted">@Model.detay.aidat_tutari  @ViewBag.aidatParaBirimi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-home"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Tipi</div>
+                                <span class="text-muted"> @Model.detay.tip</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr />
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-list-ol"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Bulunduğu Kat</div>
+                                <span class="text-muted">@Model.detay.kat. Kat</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-key"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Durumu</div>
+                                <span class="text-muted">@Model.detay.durumu</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-cube"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Brüt m²</div>
+                                <span class="text-muted">@Model.detay.brut_alan m²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <hr />
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-cube"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Net m²</div>
+                                <span class="text-muted">@Model.detay.net_alan m²</span>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-map-signs"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Arsa Payı</div>
+                                <span class="text-muted">@Model.detay.arsa_payı</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="fa fa-sort-numeric-desc"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Daire adres no</div>
+                                <span class="text-muted">@Model.detay.daire_adres_no</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /traffic sources -->
+
+    </div>
+
+    <div class="col-xl-5">
+
+        <!-- Sales stats -->
+        @*<div class="card">
+                <div class="card-header header-elements-inline">
+                    <h6 class="card-title">Notlar</h6>
+                    <div class="header-elements">
+
+                    </div>
+                </div>
+                <div class="chart mb-2" id="app_sales"><svg width="650.078125" height="319"><g transform="translate(50,5)"></g></svg></div>
+
+            </div>*@
+        <!-- /sales stats -->
+        <!-- Rounded basic tabs -->
+        <div class="row">
+
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header header-elements-inline" style="margin-bottom:0">
+                        <h6 class="card-title">Dosya işlemleri</h6>
+                        <div class="header-elements">
+                            <div class="list-icons">
+                              
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .file-input .file-caption-main {
+                            display: none !important;
+                        }
+                   
+                    </style>
+                    <div class="card-body" style="overflow-y: scroll;height:328px;padding-top:0">
+                        <ul class="nav nav-tabs nav-tabs-bottom border-bottom-0 nav-justified" style="margin-bottom:0">
+                            <li class="nav-item"><a href="#basic-rounded-justified-tab1" class="nav-link rounded-top active" data-toggle="tab">Dosyalar</a></li>
+                            <li class="nav-item"><a href="#basic-rounded-justified-tab2" class="nav-link rounded-top" data-toggle="tab">Dosya ekle</a></li>
+                            <li class="nav-item"><a href="#basic-rounded-justified-tab3" class="nav-link rounded-top" data-toggle="tab">Dosya tara</a></li>
+                            <li class="nav-item"><a href="#basic-rounded-justified-tab4" class="nav-link rounded-top" data-toggle="tab">Notlar</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="basic-rounded-justified-tab1">
+                                <input type="file" id="dosyalar" data-show-remove="fa" data-fouc>
+                            </div>
+
+                            <div class="tab-pane fade" id="basic-rounded-justified-tab2">
+
+
+
+                                @*<button type="button" id="uploadfiles" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>*@
+                                <div class="card">
+
+                                    <div class="card-body">
+                                        @*<p class="font-weight-semibold">Yüklemek istediğiniz dosyları seçiniz</p>*@
+                                        @*<form action="/BagimsizBolum/DosyaKaydet" method="post" class="dropzone" enctype="multipart/form-data" id="mydropzone">
+                                        <div class="form-group row" style="display:none">
+                                            <label class="col-lg-3 col-form-label">Bagimsiz id</label>
+                                            <div class="col-lg-9">
+
+                                                <input type="text" class="form-control" name="bagimsiz_id" value="@ViewContext.RouteData.Values["id"]">
+
+                                            </div>
+                                        </div>
+                                    </form>*@
+                                        <form action="/Dosya/DosyaKaydet" method="post" class="dropzone" enctype="multipart/form-data" id="mydropzone">
+                                            <div class="form-group row" style="display:none">
+                                                <label class="col-lg-3 col-form-label">Bagimsiz id</label>
+                                                <div class="col-lg-9">
+                                                    <input type="text" class="form-control" name="bagimsiz_id" value="@ViewContext.RouteData.Values["id"]">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <button type="button" style="margin-top:10px" id="uploadfiles" class="btn btn-block btn-primary">Yükle <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="basic-rounded-justified-tab3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <button type="button" onclick="Yazdir()" class="btn btn-block btn-primary">Tara <i class="icon-printer ml-2"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="basic-rounded-justified-tab4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        Notlar
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /rounded basic tabs -->
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="demo-container">
+                <div id="gridContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Yazdir() {
+        $("#progRess").modal("show");
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, 100);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%';
+            }
+        }
+        if (bagimsizId != "") {
+            $.ajax({
+                url: "/Dosya/Yazdir",
+                type: "POST",
+                data: { bagimsiz_id: bagimsizId },
+                success: function (response) {
+
+
+
+                    if (response == true) {
+
+                        $("#progRess").modal("hide");
+                        Uyari("success", "Tarama işlemi başarılı");
+
+                        setTimeout(function () {
+                                window.location.href = "/BagimsizBolum/Detay/" +@ViewContext.RouteData.Values["id"];
+                        }, 7000);
+
+                    }
+                    else {
+                        Uyari("error", "Hata meydana geldi");
+
+                    }
+                }
+            });
+
+        }
+        else {
+
+            console.log("bağimsiz id değeri boş");
+        }
+    }
+
+    //Dropzone.autoDiscover = false;
+
+    var dz = null;
+    $("#mydropzone").dropzone({
+        autoProcessQueue: false,
+        //paramName: "file",
+        maxFileSize: 1, //mb
+        //acceptedFiles : ".jpg,jpeg,.png,.pdf",
+        addRemoveLinks: true,
+        init: function () {
+            dz = this;
+
+            $("#uploadfiles").click(function () {
+                dz.processQueue();
+
+            });
+        },
+
+        success: function (response) {
+
+            if (response == true) {
+                Uyari("success", "İşlem başarılı");
+
+                setTimeout(function () {
+                    window.location.href = "/BagimsizBolum/Detay/" + bagimsizId;
+                }, 1000);
+
+                return;
+            }
+            else {
+                Uyari("success", "İşlem başarılı");
+
+                setTimeout(function () {
+                    window.location.href = "/BagimsizBolum/Detay/" + bagimsizId;
+                }, 1000);
+            }
+
+        },
+        dictDefaultMessage : "Buraya görsellerinizi yükleyin"
+
+    });
+
+
+    var modalTemplate = '<div class="modal-dialog modal-lg" role="document">\n' +
+        '  <div class="modal-content">\n' +
+        '    <div class="modal-header align-items-center">\n' +
+        '      <h6 class="modal-title">{heading} <small><span class="kv-zoom-title"></span></small></h6>\n' +
+        '      <div class="kv-zoom-actions btn-group">{toggleheader}{fullscreen}{borderless}{close}</div>\n' +
+        '    </div>\n' +
+        '    <div class="modal-body">\n' +
+        '      <div class="floating-buttons btn-group"></div>\n' +
+        '      <div class="kv-zoom-body file-zoom-content"></div>\n' + '{prev} {next}\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>\n';
+
+    // Buttons inside zoom modal
+    var previewZoomButtonClasses = {
+        toggleheader: 'btn btn-light btn-icon btn-header-toggle btn-sm',
+        fullscreen: 'btn btn-light btn-icon btn-sm',
+        borderless: 'btn btn-light btn-icon btn-sm',
+        close: 'btn btn-light btn-icon btn-sm'
+    };
+
+    // Icons inside zoom modal classes
+    var previewZoomButtonIcons = {
+        prev: '<i class="icon-arrow-left32"></i>',
+        next: '<i class="icon-arrow-right32"></i>',
+        toggleheader: '<i class="icon-menu-open"></i>',
+        fullscreen: '<i class="icon-screen-full"></i>',
+        borderless: '<i class="icon-alignment-unalign"></i>',
+        close: '<i class="icon-cross2 font-size-base"></i>'
+    };
+
+    // File actions
+    var fileActionSettings = {
+        zoomClass: '',
+        zoomIcon: '<i class="icon-zoomin3"></i>',
+        dragClass: 'p-2',
+        dragIcon: '<i class="icon-three-bars"></i>',
+        removeClass: '',
+        removeErrorClass: 'text-danger',
+        removeIcon: '<i class="icon-bin"></i>',
+        indicatorNew: '<i class="icon-file-plus text-success"></i>',
+        indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+        indicatorError: '<i class="icon-cross2 text-danger"></i>',
+        indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>'
+    };
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        if (!$().fileinput) {
+            console.warn('Warning - fileinput.min.js is not loaded.');
+            return;
+        } else {
+            $('#dosyalar').fileinput({
+                browseLabel: 'Browse',
+                browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                uploadIcon: '<i class="icon-file-upload2 mr-2"></i>',
+                removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>',
+                    modal: modalTemplate
+                },
+
+
+                initialPreview: [
+
+                    @{
+
+                        List<MYARCH.CORE.Entities.dosyalar> dosyalar = new List<MYARCH.CORE.Entities.dosyalar>();
+
+                        using (var context = new MYARCH.DATA.Context.MyArchContext())
+                        {
+
+                            dosyalar = context.Database.SqlQuery<MYARCH.CORE.Entities.dosyalar>("SELECT * FROM dosyalar WHERE bagimsiz_id= '"+ @ViewContext.RouteData.Values["id"] + "'").ToList();
+
+                        }
+
+                        foreach (var item in dosyalar)
+                        {
+                            <text>
+                            'http://localhost:49256/@item.dosya_yolu',
+                           </text>
+                        }
+
+                    }
+
+
+                ],
+                initialPreviewConfig: [
+
+
+                   @foreach (var item in dosyalar)
+                   {
+                       var i = 1;
+                       i++;
+                       if (item.dosya_tipi == "pdf")
+                       {
+                            <text>
+                             { type: "pdf", size: 8000, caption: "@item.dosya_adi", key: @i, showDrag: false },
+                           </text>
+                       }
+                       else
+                       {
+                          <text>
+                             { caption: "@item.dosya_adi", size: 930321, key: @i, showDrag: false },
+                           </text>
+                       }
+                   }
+
+
+                    //{ type: "pdf", size: 8000, caption: "About.pdf", key: 1, showDrag: false },
+                  //{ type: "pdf", size: 8000, caption: "About.pdf", key: 2, showDrag: false },
+                    //{ type: "pdf", size: 8000, caption: "Aboust.pdf", key: 2, showDrag: false },
+                    //{ type: "pdf", size: 8000, caption: "Aboustss.png", key: 3, showDrag: false
+                ],
+                initialPreviewAsData: true,
+                overwriteInitial: false,
+                maxFileSize: 100,
+                previewZoomButtonClasses: previewZoomButtonClasses,
+                previewZoomButtonIcons: previewZoomButtonIcons,
+                fileActionSettings: fileActionSettings
+            });
+        }
+
+    });
+
+ var bagimsizId = @ViewContext.RouteData.Values["id"];
+
+    function CikisTarihKaydet() {
+
+        $('#cikisTarihi').modal('hide');
+
+        var kisiId = document.getElementById("kisiId").value;
+        var cikisTarih = document.getElementById("cikisTarihiId").value;
+        var kisiTipi = document.getElementById("kisiTip").value;
+
+        var model = {
+            kisi_id: kisiId,
+            cikis_tarihi: cikisTarih,
+            bagimsiz_id: bagimsizId,
+            tip: kisiTipi
+        }
+
+        //console.log(model);
+        if (kisiId != '' && cikisTarih != '') {
+            //Guncelle("/BagimsizBolum/CikisTarihiGuncelle/", model, "İşlem başarili", "/BagimsizBolum/Detay/" + bagimsizId, "Bir hata meydana geldi");
+            $.ajax({
+                url: "/BagimsizBolum/CikisTarihiGuncelle",
+                type: "POST",
+                data: model,
+                success: function (response) {
+                    if (response == "0") {
+                        Uyari("warning", "Kişinin borcu olduğudan dolayı çıkarma işlemi yapılamaz");
+                        return;
+                    }
+                    if (response == true) {
+                        Uyari("success", "İşlem başarılı");
+
+                        setTimeout(function () {
+                            window.location.href = "/BagimsizBolum/Detay/" + bagimsizId;
+                        }, 1000);
+
+                        return;
+                    }
+                    else {
+                        Uyari("error", "İşlem sırasında bir hata oluştu");
+                    }
+
+                }
+            });
+        }
+        else {
+            alert("hata meydana geldi");
+        }
+    }
+
+    function BagimsizGuncelle() {
+
+        window.location.href = "/BagimsizBolum/DetayDuzenle/" + bagimsizId;
+    }
+
+    var cikarDegisken = false;
+
+    $(document).on('click', '.kv-file-remove', function () {
+        var bagimsizId = @ViewContext.RouteData.Values["id"];
+        alert(bagimsizId);
+    });
+
+
+</script>
+
+<div id="kisiListesi" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row" style="margin-top:25px;">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tip</label>
+                            <select data-placeholder="Kişi tipi seçiniz" id="kisiTipi" class="form-control form-control-select2" data-fouc>
+                                <option></option>
+                                <option value="katmaliki">Kat maliki</option>
+                                <option value="kiraci">Kiracı</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tarih</label>
+                            <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="girisTarihi" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Hisse payı</label>
+                            <input type="text" class="form-control" id="hissePayi">
+                        </div>
+                    </div>
+                    @*<div class="col-md-2" id="kendim" style="display:none;">
+                            <div class="form-group">
+                                <label>Kendim </label>
+                                <input type="checkbox" class="form-control" id="KatMalikiSec">
+                            </div>
+                        </div>*@
+                    <div class="col-md-2" style="margin-top:28px">
+                        <div class="form-group">
+                            <a class="btn btn-primary" href="/Kisiler/Kaydet/" role="button">Kişi ekle</a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-body">
+
+                <div id="test"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $('select').on('change', function (e) {
+        var secilen = $("option:selected", this);
+        var secilenDeger = this.value;
+
+
+        if (secilenDeger == 'kiraci') {
+            $('#kendim').hide();
+
+        }
+        if (secilenDeger == 'katmaliki') {
+            $('#kendim').show();
+        }
+
+    });
+</script>

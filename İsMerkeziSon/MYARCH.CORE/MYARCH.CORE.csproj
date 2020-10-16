@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2DC320F4-2417-44CB-A68B-11955AD7943A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MYARCH.CORE</RootNamespace>
+    <AssemblyName>MYARCH.CORE</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\aidat_gun.cs" />
+    <Compile Include="Entities\anasayac.cs" />
+    <Compile Include="Entities\bagimsiz_bolum_kisiler.cs" />
+    <Compile Include="Entities\banka.cs" />
+    <Compile Include="Entities\blok.cs" />
+    <Compile Include="Entities\anasayac_ortak_dagitim.cs" />
+    <Compile Include="Entities\bagimsiz_bolum_sayaclari.cs" />
+    <Compile Include="Entities\bagimsiz_bolumler.cs" />
+    <Compile Include="Entities\borc_tipleri.cs" />
+    <Compile Include="Entities\dosyalar.cs" />
+    <Compile Include="Entities\firmalar.cs" />
+    <Compile Include="Entities\hesap_hareket.cs" />
+    <Compile Include="Entities\kasa.cs" />
+    <Compile Include="Entities\banka_hareket.cs" />
+    <Compile Include="Entities\kasa_haraket.cs" />
+    <Compile Include="Entities\kisiler.cs" />
+    <Compile Include="Entities\kullanici.cs" />
+    <Compile Include="Entities\Base.cs" />
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Entities\muhtelif_baslikler.cs" />
+    <Compile Include="Entities\muhtelif_islemler.cs" />
+    <Compile Include="Entities\personel.cs" />
+    <Compile Include="Entities\sayac_tipleri.cs" />
+    <Compile Include="Entities\sms.cs" />
+    <Compile Include="Entities\tipler.cs" />
+    <Compile Include="Entities\toplu_borclandir.cs" />
+    <Compile Include="Entities\vade_gun.cs" />
+    <Compile Include="Entities\yakit.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

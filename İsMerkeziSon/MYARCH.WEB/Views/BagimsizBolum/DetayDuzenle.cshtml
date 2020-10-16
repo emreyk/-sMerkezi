@@ -1,0 +1,339 @@
+﻿
+@{
+    ViewBag.Title = "DetayDuzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using MYARCH.DTO.EEntity
+@model MYARCH.DTO.EEntity.EBagimsizBolumlerDTO
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Bağımsız Bölüm Düzenle /@Model.daire_numarasi
+                            </h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Blok adı</label>
+                                @*<div class="col-lg-10">
+                                        <select class="form-control form-control-select2" id="blok" data-fouc>
+                                            <option></option>
+                                            <optgroup label="">
+                                                @foreach (EBlokDTO bloklar in ViewBag.Bloklar)
+                                                {
+                                                    <option value="@bloklar.id">@bloklar.blok_adi</option>
+
+
+                                                }
+                                            </optgroup>
+
+                                        </select>
+                                    </div>*@
+                                <div class="col-lg-10">
+                                    <select class="form-control form-control-select2" id="blok" data-fouc>
+
+                                        <optgroup label="">
+                                            @foreach (EBlokDTO bloklar in ViewBag.Bloklar)
+                                            {
+                                                <option value="@bloklar.id">@bloklar.blok_adi</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kat</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kat" value="@Model.kat">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">No</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="daireNo" value="@Model.daire_numarasi">
+                                </div>
+                            </div>
+
+
+                            @if (ViewBag.DaireDetay == true)
+                            {
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Bağımsız bölüm tipi</label>
+
+                                    <div class="col-lg-10">
+                                        <select class="form-control form-control-select2" id="tip" data-fouc>
+
+                                            <optgroup label="">
+                                                @foreach (ETiplerDTO tip in ViewBag.Tipler)
+                                                {
+                                                    <option value="@tip.id" @(ViewBag.TipAdi == tip.bagimsiz_tip ? "selected" : "" )>@tip.bagimsiz_tip</option>
+                                                }
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Bağımsız bölüm tipi</label>
+                                    <div class="col-lg-10">
+                                        <select data-placeholder="Seçim yapınız" class="form-control form-control-select2" id="tip" data-fouc>
+                                            <option></option>
+                                            <optgroup label="Daire tipi">
+                                                @foreach (ETiplerDTO tip in ViewBag.Tipler)
+                                                {
+                                                    <option value="@tip.id">@tip.bagimsiz_tip</option>
+                                                }
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Aidat tutarı<span style="font-weight:bold">(para birimi @ViewBag.aidatParaBirimi)</span></label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="aidat" value="@Model.aidat_tutari" readonly>
+                                </div>
+                                <div class="col-lg-1">
+                                    <label style="font-weight:bold; line-height:35px"> @ViewBag.aidatParaBirimi</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Toplam arsa payı</label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="arsaPayi" value="8548" readonly>
+                                </div>
+                                <div class="col-lg-1">
+                                    <label style="font-weight:bold; line-height:35px"> M²</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label"> Daire  arsa payı</label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="arsaPayi" value="@Model.arsa_payı">
+                                </div>
+                                <div class="col-lg-1">
+                                    <label style="font-weight:bold; line-height:35px"> M²</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Daire adres no</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="adresNo" value="@Model.daire_adres_no">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Su abone no</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="suAboneNo" value="@Model.su_abone_no">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Elektrik abone no</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="elektrikAboneNo" value="@Model.elektrik_abone_no">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Petek boyu</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="petekBoyu" value="@Model.petek_boyu">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Durum</label>
+                                <div class="col-lg-10" id="durum">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="dolu" class="form-input-styled" name="deger" @(Model.durumu == "dolu" ? "checked" : "" ) data-fouc>
+                                            Dolu
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="bos" name="deger" @(Model.durumu == "bos" ? "checked" : "" ) data-fouc>
+                                            Boş
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="BagimsizBolumGuncelle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    //NoktaEngel("#arsaPayi");
+    //DisiableTrue("aidat");
+
+    //SadeceRakam("#kat");
+    //SadeceRakam("#aidat");
+    //SadeceRakam("#brut");
+    //SadeceRakam("#net");
+    //SadeceRakam("#kat");
+    ////SadeceRakam("#arsaPayi");
+    //SadeceRakam("#petekBoyu");
+
+    $('select').on('change', function () {
+        var id = this.value;
+        if (id != '') {
+            $.ajax({
+                url: "/BagimsizBolum/TipeGoreAidat",
+                type: "POST",
+                data: { id: id },
+                success: function (response) {
+                    console.log(id);
+                    if (response != null) {
+                        $("#aidat").val(response);
+                    }
+
+                    else {
+                        Uyari("error", "Bu daire tipine ait aidat tutarı bulunamadı");
+                    }
+
+                }
+            });
+        }
+
+    });
+
+
+    function BagimsizBolumGuncelle() {
+
+        var tip = document.getElementById("tip");
+        var tipAdi = tip.options[tip.selectedIndex].text;
+        var tipId = tip.options[tip.selectedIndex].value;
+
+
+        if (document.getElementById("kat").value == '') {
+            Uyari("error", "Lütfen daire katını giriniz");
+            return;
+        }
+        if (tipId == '') {
+            Uyari("warning", "Tanımlar menüsünden tip tanımlamasını yapınız");
+            return;
+        }
+        if (document.getElementById("aidat").value == '') {
+            Uyari("error", "Lütfen aidat tutarını giriniz");
+            return;
+        }
+
+        if (document.getElementById("arsaPayi").value == '') {
+            Uyari("error", "Lütfen arsa payını giriniz");
+            return;
+        }
+        if (document.getElementById("daireNo").value == '') {
+            Uyari("error", "Lütfen daire adres numrasını giriniz");
+            return;
+        }
+
+        if (document.getElementById("petekBoyu").value == '') {
+            Uyari("error", "Lütfen petek boyunu giriniz");
+            return;
+        }
+
+        if ('@ViewBag.aidatParaBirimi'== '') {
+            Uyari("warning", "Aidat icin para birimini giriniz");
+            return;
+        }
+
+        var adresNo = document.getElementById("adresNo").value;
+
+
+         var id = @ViewContext.RouteData.Values["id"];
+         var e = document.getElementById("blok");
+         var blok = e.options[e.selectedIndex].text;
+         var blokId = e.options[e.selectedIndex].value;
+
+
+
+        var model = {
+            id: id,
+            kat:  document.getElementById("kat").value,
+            daire_numarasi: document.getElementById("daireNo").value,
+            aidat_tutari: document.getElementById("aidat").value,
+            tip: tipAdi,
+            tip_id:tipId,
+            //brut_alan: document.getElementById("brut").value,
+            //net_alan: document.getElementById("net").value,
+            arsa_payı: document.getElementById("arsaPayi").value,
+            daire_adres_no: document.getElementById("adresNo").value,
+            su_abone_no: document.getElementById("suAboneNo").value,
+            petek_boyu: document.getElementById("petekBoyu").value,
+            elektrik_abone_no: document.getElementById("elektrikAboneNo").value,
+            blok_adi: blok,
+            durumu: document.querySelector('input[name="deger"]:checked').value,
+            blok_id: blokId,
+            para_birimi:'@ViewBag.aidatParaBirimi'
+        };
+
+
+
+        if (adresNo != '') {
+             $.ajax({
+             url: "/BagimsizBolum/BagimsizAdresNoKontrol",
+             type: "POST",
+             data: { adresDaireNo: adresNo, id: id },
+             success: function (response) {
+                 if (response == true) {
+                     Guncelle("/BagimsizBolum/Guncelle", model, "Güncelleme işlemi başarılı", "/BagimsizBolum/Detay/" + id, "İşlem sırasında bir hata meydana geldi")
+                 }
+
+                 else {
+                     Uyari("error", "Bu daire adres numarası kayıtlıdır");
+                 }
+
+             }
+         });
+     }
+
+        else {
+
+            Uyari("error", "id değerine ulasılamadı");
+
+         }
+
+    }
+</script>

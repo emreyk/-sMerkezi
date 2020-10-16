@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "PersonelGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@model MYARCH.DTO.EEntity.EPersonelDTO
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Personel Ekle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Personel adı:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="personelAdiGuncelle" value="@Model.personel_adi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tc:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tcNoGuncelle" value="@Model.personel_tc">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Gorevi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="personelGorevGuncelle" value="@Model.personel_gorev">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">E-mail</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="personelEmailGuncelle" value="@Model.personel_email">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="personelTelefonGuncelle" value="@Model.personel_tel">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Giriş tarihi:</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="personelGirisTarihGuncelle" value="@Model.personel_giristarihi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Çıkış tarihi:</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="personelCikisTarih" value="@Model.personel_cikisstarihi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Maaş:</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="personelMaasGuncelle" value="@Model.personel_maas">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Cinsiyet:</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="erkek" class="form-input-styled" name="deger" @(Model.personel_cinsiyet=="erkek"?"checked":"" )  data-fouc>
+                                            Erkek
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="bayan" name="deger" @(Model.personel_cinsiyet=="bayan"?"checked":"" ) data-fouc>
+                                            Bayan
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="PersonelGuncelle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

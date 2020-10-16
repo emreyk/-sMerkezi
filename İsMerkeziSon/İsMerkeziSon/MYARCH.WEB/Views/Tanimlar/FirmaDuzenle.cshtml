@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "FirmaDuzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+
+@model firmalar
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Firma duzenle</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Firma id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Firma adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="firmaAdiGuncelle" value="@Model.firma_adi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Telefon</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="telefonGuncelle" value="@Model.telefon">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">E-posta</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="ePostaGuncelle" value="@Model.email">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adres</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="adresGuncelle" value="@Model.adres">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Yetkili kişi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="yetkiliKisiGuncelle" value="@Model.yetkili_kisi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış tarihi</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="tarihGuncelle" value="@Model.acilis_tarihi.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış bakiyesi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="acilisBakiyesiGuncelle" value="@Model.acilis_bakiyesi">
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="FirmaGuncelle()">Güncelle <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scriptler/Tanimlar/Firma.js">
+    FirmaGuncelle();
+</script>
+
+
+
+

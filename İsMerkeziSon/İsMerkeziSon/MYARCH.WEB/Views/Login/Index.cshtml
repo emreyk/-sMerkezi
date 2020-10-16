@@ -1,0 +1,176 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>Beto Yazılım | Bina Yönetim Sistemi</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+
+    <link href="~/Content/assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+
+    <link href="~/Content/assets/css/style.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/theme/default.css" rel="stylesheet" id="theme" />
+
+    <link href="~/Content/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/style-responsive.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/animate.min.css" rel="stylesheet" />
+    <link href="~/Content/global_assets/css/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/assets/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/components.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/colors.min.css" rel="stylesheet" />
+
+    <link href="~/Content/Toastr/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/Custom/css/custom.css" rel="stylesheet" />
+    <!-- ================== END BASE CSS STYLE ================== -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="~/Content/assets/plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top bg-white">
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade">
+        <!-- begin login -->
+        <div class="login login-with-news-feed">
+            <!-- begin news-feed -->
+            <div class="news-feed">
+                <div class="news-image">
+                    <img src="~/Content/assets/img/login-bg/site.jpg" data-id="login-cover-image" alt="" />
+                </div>
+                <div class="news-caption">
+                    <h4 class="caption-title">Bina Yönetim Sistemi <br /><small> www.betoyazilim.com.tr | &copy; Beto Yazılım 2019</small></h4>
+                    <p>
+
+                    </p>
+                </div>
+            </div>
+            <!-- end news-feed -->
+            <!-- begin right-content -->
+            <div class="right-content">
+                <!-- begin login-header -->
+                <div class="login-header">
+                    <img style="width:250px" src="~/Content/global_assets/images/biyonsis_logo.png" alt="" />
+                    <h2>Bina Yönetim Sistemi</h2>
+                    <br />
+                    <br />
+                    <div class="brand">
+                        Kullanıcı Girişi
+                    </div>
+                </div>
+                <!-- end login-header -->
+                <!-- begin login-content -->
+                <div class="login-content">
+                    <form action="#" method="POST" class="margin-bottom-0">
+                        <div class="form-group m-b-15">
+                            <input type="text" class="form-control input-lg" id="kAdi" placeholder="Kullanıcı Adınız" required />
+                        </div>
+                        <div class="form-group m-b-15">
+                            <input type="password" class="form-control input-lg" id="sifre" placeholder="Şifreniz" required />
+                        </div>
+
+                        <div class="login-buttons">
+                            @**@
+                            <button type="button" class="btn btn-primary btn-ladda btn-block btn-ladda-spinner ladda-button" onclick="GirisKontrol()" data-spinner-color="#333" data-style="zoom-out" style="font-size:16px;">
+                                <span class="ladda-label">Giriş Yap</span>
+                                <span class="ladda-spinner"></span>
+                            </button>
+                        </div>
+                        <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                            @*Not a member yet? Click <a href="register_v3.html">here</a> to register.*@
+                        </div>
+                        @*<hr />
+                            <p class="text-center">
+
+                            </p>*@
+                    </form>
+                </div>
+                <!-- end login-content -->
+            </div>
+            <!-- end right-container -->
+        </div>
+
+    </div>
+    <!-- end page container -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="~/Content/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+    <script src="~/Content/assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+    <script src="~/Content/assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="assets/crossbrowserjs/html5shiv.js"></script>
+        <script src="assets/crossbrowserjs/respond.min.js"></script>
+        <script src="assets/crossbrowserjs/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="~/Content/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Content/assets/plugins/jquery-cookie/jquery.cookie.js"></script>
+    <script src="~/Content/global_assets/js/plugins/buttons/spin.min.js"></script>
+    <script src="~/Content/global_assets/js/plugins/buttons/ladda.min.js"></script>
+    <script src="~/Content/global_assets/js/demo_pages/components_buttons.js"></script>
+    <script src="~/Content/global_assets/js/plugins/notifications/jgrowl.min.js"></script>
+    <script src="~/Content/global_assets/js/plugins/notifications/noty.min.js"></script>
+    <script src="~/Content/Toastr/toastr.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="~/Content/assets/js/apps.min.js"></script>
+
+    <script src="~/Content/myScript.js"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+
+    <script>
+        $(document).ready(function () {
+            App.init();
+        });
+    </script>
+</body>
+
+</html>
+
+
+<script>
+    function GirisKontrol() {
+        var model = { kullanici_adi: $("#kAdi").val(), sifre: $("#sifre").val() };
+        if (model.kullanici_adi != "" && model.sifre != "") {
+            $.ajax({
+                url: "/Login/LoginControl",
+                type: "POST",
+                data: model,
+                success: function (response) {
+                    if (response == "") {
+                        Uyari("error", "Giriş başarısız");
+                    }
+
+                    else {
+                        Uyari("success", "Anasayfaya yönlendiriliyorsunuz");
+                        setTimeout(function () {
+                            window.location.href = response;
+                        }, 2000);
+                    }
+                }
+            });
+        } else {
+            Uyari("error", "Lütfen kullanıcı adınızı ve şifrenizi giriniz");
+            /*setTimeout(function () {
+                
+                window.location.href = "/Login";
+            }, 2000);*/
+        }
+    }
+</script>
+
+

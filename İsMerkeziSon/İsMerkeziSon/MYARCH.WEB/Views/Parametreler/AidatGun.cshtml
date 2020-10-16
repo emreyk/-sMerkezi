@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "AidatGun";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="aidatGun" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Duzenle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Vade gunu</label>
+                    <input type="text" class="form-control" id="aidatGunu" required>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="AidatGunGuncelle()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(function () {
+
+            var aidatGun =  [@Html.Raw(Json.Encode(Model))];
+
+
+            var dataGrid = $("#aidatGunListesi").dxDataGrid({
+                dataSource: aidatGun,
+                loadPanel: {
+                    enabled: true,
+
+                },
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            //filterRow: {
+            //    visible: true,
+            //    applyFilter: "auto"
+            //},
+
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+
+                {
+                    dataField: "aidat_gunu",
+                    caption: "Gün",
+                },
+
+
+
+            ],
+
+
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+                toolbarItems.push({
+                    text: "Borçlandırma günü",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            //window.location.href = "/TopluBorclandir/Kaydet/";
+                            $("#aidatGun").modal("show");
+                        },
+                        text: "Düzenle",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+
+        function AidatGunGuncelle() {
+
+            var aidatGunu = document.getElementById("aidatGunu").value;
+         
+            if (aidatGunu != '' && aidatGunu != null) {
+
+                var model = {
+                    aidatGunu: aidatGunu,
+                };
+
+
+                Guncelle("/Parametreler/AidatGunuGuncelle/", model, "İşlem başarılı","/Parametreler/AidatGun/","Bir hata meydana geldi")
+            }
+
+            else {
+                Uyari("error", "veri boş");
+            }
+        }
+
+
+</script>
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="aidatGunListesi">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,252 @@
+﻿
+@using MYARCH.DTO.EEntity;
+@model List<EHesapHaraketDTO>
+
+<script>
+        $(function () {
+
+
+            var tahsilatlar =  @Html.Raw(Json.Encode(Model));
+
+
+            var sontarih = "";
+            var sonOdemeTarih = "";
+
+            for (i = 0; i < tahsilatlar.length; i++) {
+
+                sontarih = moment(tahsilatlar[i]["tarih"]).format("YYYY-MM-DD");
+                sonOdemeTarih = moment(tahsilatlar[i]["sonodeme_tarihi"]).format("YYYY-MM-DD");
+
+                tahsilatlar[i]["sonTarih"] = sontarih;
+                tahsilatlar[i]["sonodeme_tarihi"] = sonOdemeTarih;
+            }
+
+        var dataGrid = $("#tahsilatContainer").dxDataGrid({
+            dataSource: tahsilatlar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+            },
+            loadPanel: {
+                enabled: true,
+
+            },
+            columns: [
+
+                {
+                    dataField: "refno",
+                    caption: "Refno",
+
+                },
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+                {
+                    dataField: "kisi_id",
+                    caption: "kisiId",
+                    visible: false,
+                },
+                {
+                    dataField: "kasa_id",
+                    caption: "kasa",
+                    visible: false,
+                },
+                {
+                    dataField: "banka_id",
+                    caption: "banka",
+                    visible: false,
+                },
+                {
+                    dataField: "sonTarih",
+                    caption: "Tarih",
+                },
+
+                {
+                    dataField: "isim",
+                    caption: "Kişi",
+                },
+                {
+                    dataField: "blok_adi",
+                    caption: "Blok",
+                },
+                {
+                    dataField: "daire_numarasi",
+                    caption: "Kapı numarası",
+                },
+
+                {
+                    dataField: "daire_numarasi",
+                    caption: "Kapı numarası",
+                },
+                {
+                    dataField: "islem",
+                    caption: "Ödeme türü",
+                },
+                  {
+                    dataField: "aciklama",
+                    caption: "Açıklama",
+                },
+                  //{
+                  //    dataField: "islem",
+                  //    caption: "İşlem",
+                  //},
+                  {
+                      dataField: "borclandirma_turu",
+                      caption: "Borçlandırma turu",
+                  },
+                {
+                    dataField: "para_birimi",
+                    caption: "Para birimi",
+                },
+                {
+                    dataField: "alacak",
+                    caption: "Tutar",
+                },
+                {
+                    caption: "",
+                    width: 100,
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                    //cssClass: "text-center",
+                    cellTemplate: function (container, options) {
+                        $('<button type="button"  class="btn btn-primary">Düzenle</button>').appendTo(container);
+                    }
+                }
+
+            ],
+       
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Tahsilatlar",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location.href = "/HesapHaraket/FinansalTahsilEt";
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+            onCellPrepared: function (e) {
+                if (e.rowType === "data" && e.column.dataField === "alacak") {
+                    e.cellElement.css("color", "green");
+                }
+
+            },
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+
+                    window.location.href = "/Tahsilat/Guncelle/" + data.refno;
+
+
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var refno = e.data["refno"];
+                var borclandirmaTuru = e.data["borclandirma_turu"];
+                var paraBirimi = e.data["para_birimi"];
+                var islem = e.data["islem"];
+                var kasaId = e.data["kasa_id"];
+                var bankaId = e.data["banka_id"];
+                var kisiId = e.data["kisi_id"];
+                var id = e.data["id"];
+
+                if (refno != null) {
+                    $.ajax({
+                        url: "/HesapHaraket/TahsilatSil",
+                        type: "POST",
+                        data: {
+                            refno: refno,
+                            borclandirmaTuru: borclandirmaTuru,
+                            para_birimi: paraBirimi,
+                            islem: islem,
+                            kasa_id: kasaId,
+                            banka_id: bankaId,
+                            kisi_id: kisiId,
+                            id:id
+
+                        },
+                        success: function (response) {
+                            if (response == true) {
+
+                                Uyari("success", "Silme işlemi başarılı");
+                            }
+                            else {
+                                Uyari("error", "Hata meydana geldi");
+
+                            }
+                        }
+                    });
+
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="tahsilatContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,372 @@
+﻿
+@{
+    ViewBag.Title = "UzunDonem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.DTO.EEntity
+
+@model EBagimsizBolumlerDTO
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Peşin Tahsilat
+                            </h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tahsilat tarihi</label>
+                                <div class="col-lg-2">
+                                    <select data-placeholder="Ay seçiniz" class="form-control form-control-select2" id="ay" data-fouc>
+                                        <option></option>
+                                        <optgroup label="">
+
+                                            @for (int i = DateTime.Now.Month; i <= 12; i++)
+                                            {
+                                                <option value="ay">@i</option>
+
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <select data-placeholder="Yıl seçiniz" class="form-control form-control-select2" id="yil" data-fouc>
+                                        <option></option>
+                                        <optgroup label="">
+
+
+                                            <option value="ay">@DateTime.Now.Year</option>
+
+
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <select data-placeholder="Gün seçiniz" class="form-control form-control-select2" id="gun" data-fouc>
+                                        <option></option>
+                                        <optgroup label="">
+
+                                            @*@for (int i = DateTime.Now.Month; i <= 12; i++)
+                                                {
+                                                    <option value="ay">@i</option>
+
+                                                }*@
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kişi</label>
+                                <div class="col-lg-9">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kisi" data-fouc>
+                                        @*<option>@Model.blok_adi</option>*@
+                                        <optgroup label="">
+                                            @foreach (EBagimsizDetayKisiler kisiler in ViewBag.kisiler)
+                                            {
+                                                <option value="@kisiler.kisi_id">@kisiler.isim</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Bağımsız bolum</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" value="@Model.blok_adi/@Model.daire_numarasi">
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Bağımsız id</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" id="bagimsizBolum" value="@Model.id">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borçlandırma türü</label>
+                                <div class="col-lg-9">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Daire no">
+                                            <option value="aidat" selected>Aidat</option>
+                                            <option value="demirbas">Demirbaş</option>
+                                            <option value="ekbutce">Ek bütçe</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" id="tutar" value="@Model.aidat_tutari">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" id="aciklama">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Ödeme tipi</label>
+                                <div class="col-lg-9" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="Nakit" class="form-input-styled" name="deger" checked data-fouc>
+                                            Nakit
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="Kredi kartı" name="deger" data-fouc>
+                                            Kredi kartı
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="Gelen havale" name="deger" data-fouc>
+                                            Gelen havale
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="kasaForm">
+                                <div class="form-group row">
+
+                                    @Html.Partial("_KasalarPartial")
+                                </div>
+                            </div>
+                            <div id="bankaForm" style="display:none">
+                                <div class="form-group row">
+
+                                    @Html.Partial("_BankalarPartial")
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="PesinTahsilat()">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+
+    $('#ay').change(function () {
+      var ay=  $("#ay option:selected").text();
+
+      if (ay != null || ay != '') {
+          $.ajax({
+              url: "/HesapHaraket/GunSayisiGetir",
+              type: "POST",
+              data: { ay: ay },
+              success: function (response) {
+                  if (response != null) {
+
+
+                      for (var i = @DateTime.Now.Day; i <= response; i++) {
+
+                          $('#gun').append('<option value="foo" selected="selected">' + i + '</option>');
+
+                          }
+
+                  }
+                  else {
+                      console.log();
+
+                  }
+              }
+          });
+      }
+
+
+    });
+
+    $('#borclandirmaTuru').change(function () {
+
+        if (this.value == 'demirbas') {
+            $("#tutar").val("")
+        }
+        if (this.value == 'ekbutce') {
+            $("#tutar").val("");
+          
+        }
+        if (this.value == 'aidat') {
+           $("#tutar").val("@Model.aidat_tutari")
+        }
+
+    });
+
+
+
+    $('input[type=radio][name=deger]').change(function () {
+
+        if (this.value == 'Nakit') {
+            bankaForm.style.display = "none";
+            kasaForm.style.display = "block";
+
+
+        }
+        if (this.value == 'Kredi kartı') {
+            bankaForm.style.display = "block";
+            kasaForm.style.display = "none";
+
+        }
+        if (this.value == 'Gelen havale') {
+            bankaForm.style.display = "block";
+            kasaForm.style.display = "none";
+
+        }
+    });
+
+    function PesinTahsilat() {
+
+        var e = document.getElementById("kisi");
+        var kisiId = e.options[e.selectedIndex].value;
+
+        var hesapAdi = e.options[e.selectedIndex].text;
+
+        var bagimsizId = document.getElementById("bagimsizBolum").value;
+        var aciklama = document.getElementById("aciklama").value;
+
+        var e = document.getElementById("borclandirmaTuru");
+        var borclandirmaTuru = e.options[e.selectedIndex].text;
+
+
+        var tutar = document.getElementById("tutar").value;
+
+        var ay = document.getElementById("ay");
+        var ayDegeri = ay.options[ay.selectedIndex].text;
+
+        var yil = document.getElementById("yil");
+        var yilDegeri = yil.options[yil.selectedIndex].text;
+
+
+        var gun = document.getElementById("gun");
+        var gunDegeri = gun.options[gun.selectedIndex].text;
+
+        var islem = document.querySelector('input[name="deger"]:checked').value
+
+        var kasa = document.getElementById("kasa");
+        var kasaId = kasa.options[kasa.selectedIndex].value;
+
+        var banka = document.getElementById("banka");
+        var bankaId = banka.options[banka.selectedIndex].value;
+
+
+        if (islem == 'Nakit') {
+            var model = {
+
+                kisi_id: kisiId,
+                bagimsiz_id: bagimsizId,
+                aciklama: aciklama,
+                borc: tutar,
+                alacak: tutar,
+                borclandirma_turu: borclandirmaTuru,
+
+                kasa_id: 0,
+                banka_id: 0,
+                ay: ayDegeri,
+                yil: yilDegeri,
+                gun: gunDegeri,
+                hesap_adi: hesapAdi,
+                islem: islem,
+                kasa_id: kasaId,
+
+            };
+        }
+        else {
+            var model = {
+
+                kisi_id: kisiId,
+                bagimsiz_id: bagimsizId,
+                aciklama: aciklama,
+                borc: tutar,
+                alacak: tutar,
+                borclandirma_turu: borclandirmaTuru,
+
+                kasa_id: 0,
+                banka_id: 0,
+                ay: ayDegeri,
+                yil: yilDegeri,
+                gun: gunDegeri,
+                hesap_adi: hesapAdi,
+                islem: islem,
+                banka_id: bankaId,
+
+            }
+        }
+
+
+        if (kisiId == '') {
+            Uyari("error", "Lütfen kişi  seçiniz");
+            return;
+        }
+
+        if (aciklama == '') {
+            Uyari("error", "Lütfen açıklama giriniz");
+            return;
+        }
+        if (borclandirmaTuru == '') {
+            Uyari("error", "Lütfen borçlandırma  tipini seçiniz");
+            return;
+        }
+
+        if (tutar == '') {
+            Uyari("error", "Lütfen tutar giriniz");
+            return;
+        }
+        if (tutar == '') {
+            Uyari("error", "Lütfen tutar giriniz");
+            return;
+        }
+
+        else {
+            Kaydet("/HesapHaraket/PesinTahsilatKaydet", model, "Kayıt işlemi başarılı", "/Kisiler/Kisi/" + kisiId, "İşlem sırasında bir hata meydana geldi")
+        }
+
+
+    }
+
+
+</script>

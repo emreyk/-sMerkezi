@@ -1,0 +1,17 @@
+﻿
+
+
+@using MYARCH.CORE.Entities
+<label class="col-lg-2 col-form-label">Banka</label>
+<div class="col-lg-10">
+    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="banka" data-fouc>
+
+        <optgroup label="">
+            @foreach (banka banka in ViewBag.bankalar)
+            {
+                <option value="@banka.id">@banka.banka_adi</option>
+            }
+        </optgroup>
+
+    </select>
+</div>

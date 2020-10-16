@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{717843D0-5231-4B3D-A7DE-79417271D428}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MYARCH.DTO</RootNamespace>
+    <AssemblyName>MYARCH.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.WIA">
+      <HintPath>..\MYARCH.WEB\obj\Debug\Interop.WIA.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EEntity\AidatGrafikTabloDTO.cs" />
+    <Compile Include="EEntity\AidatYardimciDTO.cs" />
+    <Compile Include="EEntity\EAnasayacDTO.cs" />
+    <Compile Include="EEntity\EBagimsizBolumlerDTO.cs" />
+    <Compile Include="EEntity\EbagimsizBolumSayaclariDTO.cs" />
+    <Compile Include="EEntity\EBagimsizDetayKisiler.cs" />
+    <Compile Include="EEntity\EBakiyeDTO.cs" />
+    <Compile Include="EEntity\EBlokDTO.cs" />
+    <Compile Include="EEntity\EBorcluListesiDTO.cs" />
+    <Compile Include="EEntity\EFinansalBorcDuzenle.cs" />
+    <Compile Include="EEntity\EFinansalTahsilatDuzenle.cs" />
+    <Compile Include="EEntity\EHesapHaraketDTO.cs" />
+    <Compile Include="EEntity\EKasaDTO.cs" />
+    <Compile Include="EEntity\EKisiDTO.cs" />
+    <Compile Include="EEntity\EKisiListesiDTO.cs" />
+    <Compile Include="EEntity\EPersonelDTO.cs" />
+    <Compile Include="EEntity\EPostUserDTO.cs" />
+    <Compile Include="EEntity\ELoginDTO.cs" />
+    <Compile Include="EEntity\ESayacOrtakDagitim.cs" />
+    <Compile Include="EEntity\ESayacTipiDTO.cs" />
+    <Compile Include="EEntity\ESmsKisi.cs" />
+    <Compile Include="EEntity\ETiplerDTO.cs" />
+    <Compile Include="EEntity\EUserDTO.cs" />
+    <Compile Include="EEntity\Scanner.cs" />
+    <Compile Include="EEntity\SessionContext.cs" />
+    <Compile Include="EEntity\TopluBorclandirDTO.cs" />
+    <Compile Include="EEntity\YaziciIsimAdlari.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

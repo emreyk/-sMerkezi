@@ -1,0 +1,428 @@
+﻿@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Semibold.woff2') format('woff2'), url('../font/graphik/Graphik-Semibold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Medium.woff2') format('woff2'), url('../font/graphik/Graphik-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Black.woff2') format('woff2'), url('../font/graphik/Graphik-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Light.woff2') format('woff2'), url('../font/graphik/Graphik-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Regular.woff2') format('woff2'), url('../font/graphik/Graphik-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik Super';
+    src: url('../font/graphik/Graphik-Super.woff2') format('woff2'), url('../font/graphik/Graphik-Super.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Bold.woff2') format('woff2'), url('../font/graphik/Graphik-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Semibold.woff2') format('woff2'), url('../font/graphik/Graphik-Semibold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Thin.woff2') format('woff2'), url('../font/graphik/Graphik-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../font/graphik/Graphik-Extralight.woff2') format('woff2'), url('../font/graphik/Graphik-Extralight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+body, .dx-widget {
+    font-family: Graphik;
+}
+h6.tabloBaslik {
+    background: #ffffff;
+    font-size: 16px;
+    margin: 0;
+    padding: 10px 15px;
+    border: 1px solid #e8eaeb;
+    border-bottom: 0;
+    height: 40px;
+    line-height: 20px;
+}
+
+.dx-toolbar .dx-toolbar-item-content > .dx-button.dx-button-normal {
+    background-color: #28ace8;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    color: #ffffff;
+    margin-left:20px;
+}
+
+    .dx-toolbar .dx-toolbar-item-content > .dx-button.dx-button-normal .dx-icon {
+        color: #ffffff;
+    }
+
+.dx-datagrid-filter-row {
+    background-color: #ffffff;
+}
+
+.dx-datagrid .dx-row > td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 25px;
+}
+
+.dx-datagrid .btn {
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.dx-button.dx-button-default {
+    float: right;
+}
+
+.ustYaziler {
+    font-size: 14px !important;
+    font-weight: 400;
+}
+.text-muted {
+    font-size: 16px !important;
+    font-weight: 600;
+    color: #616161
+    !important;
+}
+
+.border-teal {
+    border-color: #a3a7a6;
+}
+
+.text-teal {
+    color: #999;
+}
+
+.card-header:not([class*=bg-]):not([class*=alpha-]) + .card-body {
+    margin-top: 25px;
+}
+
+.dx-toolbar .dx-toolbar-label{
+    font-size:17px;
+    font-weight:400;
+}
+
+.borc {
+    font-size: 16px !important;
+    color: #4d4d4e !important;
+    display: block;
+    font-weight: 500;
+}
+
+.dx-button-text {
+    display: inline-block;
+    line-height: 20px;
+    text-transform:unset !important;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+
+.dx-button-has-text .dx-button-content {
+    /*padding: 0px 0px;*/
+}
+
+
+/*.tabletoplambakiye td {
+    padding: 7px !important;
+   
+}*/
+.login .login-header{
+    width:100%;
+}
+.login .login-header .brand {
+    font-size: 22px !important;
+}
+.login.login-with-news-feed .login-header, .register.register-with-news-feed .register-header{
+    text-align:center;
+}
+.navbar-header .navbar-brand {
+    padding: 5px 0;
+}
+.nav-sidebar .nav-link i {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 20px;
+}
+.nav-sidebar > .nav-item > .nav-link {
+    font-size: 14px;
+    padding: 15px 20px;
+}
+.btn{
+    font-weight:300;
+}
+
+.card-header .card-title, .dx-toolbar-label .dx-toolbar-item-content > div {
+    font-weight: 500;
+    font-size: 18px;
+}
+.card .card-header {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e5e5e5 !important;
+    padding: 10px 20px !important;
+    background-image: linear-gradient(white, #efefef);
+}
+.table-striped tbody tr:nth-of-type(odd), .dx-datagrid .dx-row-alt > td {
+    background-color: rgba(0,0,0,.04);
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 0, 0.1);
+}
+.gecerliay {
+    background-color: #ffe60001;
+    border-left: 4px solid #263238  !important;
+    border-right: 4px solid #263238  !important;
+}
+table thead th.gecerliay {
+    color: #000;
+    font-weight: 800 !important;
+    font-size: 16px;
+    border-top: 4px solid #263238  !important;
+    border-bottom: none !important;
+}
+table tbody td.gecerliay .icon-checkmark {
+    color: #ffffff;
+    background: #6dbd4cc7;
+    padding: 6px;
+    border-radius: 20px;
+    border: 1px solid #4caf5050;
+}
+table tbody td.gecerliay .fa-close {
+    color: #ffffff;
+    background: #f95d5df0;
+    padding: 7px;
+    border-radius: 20px;
+    line-height: 16px;
+    border: 1px solid #f95d5d50;
+    font-size: 20px;
+}
+table tbody tr:last-child td.gecerliay {
+    border-bottom: 4px solid #263238  !important;
+}
+.table td, .table th {
+    padding: 4px 1.25rem;
+}
+#aidat .table td {
+    padding: 7px 1.25rem;
+}
+.nav-sidebar .nav-item:not(.nav-item-header):last-child, .nav-sidebar .nav-item:not(.nav-item-header):first-child {
+    padding:0;
+}
+.sidebar-dark .nav-sidebar > .nav-item-submenu > .nav-group-sub, .sidebar-light .card[class*=bg-]:not(.bg-light):not(.bg-white):not(.bg-transparent) .nav-sidebar > .nav-item-submenu > .nav-group-sub {
+    background-color: rgba(38, 166, 154,0.8);
+}
+.sidebar-dark .nav-sidebar .nav-link:not(.disabled):hover, .sidebar-light .card[class*=bg-]:not(.bg-light):not(.bg-white):not(.bg-transparent) .nav-sidebar .nav-link:not(.disabled):hover {
+    /*background-color: rgba(0,0,0,.15);*/
+    background-color: rgba(38, 166, 154,0.8);
+}
+.nav-sidebar .nav-item:not(.nav-item-divider) {
+    margin:0;
+}
+.nav-item-submenu > .nav-link:after {
+    top: 50%;
+    margin-top: -8px;
+}
+.nav-sidebar {
+    padding-top: 15px;
+}
+.nav-sidebar .nav-link {
+    font-size: 14px;
+}
+.dx-datagrid-rowsview .dx-row:hover {
+    cursor: pointer;
+}
+.dx-data-row.dx-state-hover, .dx-data-row.dx-state-hover td {
+    background-color: rgba(255, 255, 0, 0.1) !important;
+}
+.dx-datagrid-header-panel {
+    background-image: linear-gradient(white, #ececec);
+}
+.dx-toolbar{
+    background:transparent;
+}
+.dx-button.dx-button-has-text {
+    /*-webkit-border-radius: 3px !important;
+    -moz-border-radius: 3px !important;
+    -ms-border-radius: 3px !important;
+    -o-border-radius: 3px !important;
+    border-radius: 3px !important;*/
+    border: 2px solid rgba(0,0,0,0.09) !important;
+    box-shadow: 0px 14px 16px -10px rgba(0,0,0,0.2);
+    box-shadow: none !important;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    /*line-height: 30px;*/
+    font-size: 14px;
+    font-weight: 500;
+}
+.dx-datagrid tbody .dx-button.dx-button-has-text .dx-button-content {
+    padding: 0;
+}
+.dx-toolbar .dx-toolbar-items-container{
+    height:60px;
+}
+.btn {
+    border: 2px solid rgba(0,0,0,0.09) !important;
+    box-shadow: 0px 14px 16px -10px rgba(0,0,0,0.15);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 3px 15px;
+}
+.btn:hover {
+    box-shadow: 0px 14px 16px -10px rgba(0,0,0,0.3) !important;
+    border: 2px solid rgba(0,0,0,0.2) !important;
+}
+.col-form-label{
+    font-size:14px;
+    font-weight:500;
+}
+.dx-datagrid .dx-row > td{
+    font-size:13px;
+}
+.modal {
+    text-align: center;
+}
+@media screen and (min-width: 768px) {
+    .modal:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: " ";
+        height: 100%;
+    }
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    width: 100%;
+}
+.modal-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+.modal .close {
+    font-size: 32px;
+    padding: 15px 20px;
+}
+label {
+    font-size: 14px;
+}
+.btn-group-sm > .btn, .btn-sm {
+    padding: 0 15px;
+    line-height: 24px;
+    font-size: 14px;
+}
+.dx-button-has-text .dx-button-content {
+    padding: 5px 16px;
+}
+/*e8e8e8*/
+
+.whiteboard .btn {
+    width: 50px;
+    height: 50px;
+    background: #838e96;
+    border: 2px solid rgba(0,0,0,0.2) !important;
+}
+.whiteboard hr {
+    border-top: 1px solid rgba(31,31,31,.12);
+    width: 100%;
+}
+.card-header:not([class*=bg-]):not([class*=alpha-]) + .card-body {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.whiteboard i {
+    font-size: 28px;
+    line-height: 35px;
+    color: #ffffff;
+}
+.dropzone .dz-default.dz-message > span {
+    font-size: 14px;
+    margin-top: 6.25rem;
+}
+.dropzone .dz-default.dz-message:before {
+    font-size: 4rem;
+    top: 1rem;
+}
+.dropzone .dz-default.dz-message {
+    height: 140px;
+}
+.dropzone {
+    min-height: 140px;
+}
+.dx-datagrid-rowsview .dx-row > td, .dx-datagrid-rowsview .dx-row > tr > td {
+    text-overflow: unset;
+}
+
+
+.dx-link-delete {
+    border: 2px solid rgba(0,0,0,0.09) !important;
+    box-shadow: 0px 14px 16px -10px rgba(0,0,0,0.15);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 3px 15px;
+    background: #FF5722;
+    color: #ffffff!important;
+}

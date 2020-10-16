@@ -1,0 +1,254 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+
+    /*
+    SELECT bolum.*,kisi.isim as adisoyadi FROM bagimsiz_bolum_kisiler as bolum
+
+    left join kisiler as kisi on kisi.id = bolum.kisi_id
+
+    where bolum.tip = 'Kiracı' or(bolum.tip = 'Kat Maliki' and bolum.kiraci is null)
+
+
+    SELECT * FROM hesap_hareket where bagimsiz_id = '3293' and ay = '10' and yil = '2019' and borclandirma_turu = 'Aidat' and tahsilat_durumu = 'ödendi'
+    */
+
+    List<MYARCH.DTO.EEntity.AidatGrafikTabloDTO> kisiler = new List<MYARCH.DTO.EEntity.AidatGrafikTabloDTO>();
+    //List<MYARCH.DTO.EEntity.AidatYardimciDTO> liste = new List<MYARCH.DTO.EEntity.AidatYardimciDTO>();
+
+    //List<string> liste = new List<string>();
+
+    using (var context = new MYARCH.DATA.Context.MyArchContext())
+    {
+
+        kisiler = context.Database.SqlQuery<MYARCH.DTO.EEntity.AidatGrafikTabloDTO>("SELECT bolum.*,kisi.isim FROM bagimsiz_bolum_kisiler as bolum " +
+            "left join kisiler as kisi on kisi.id = bolum.kisi_id " +
+            "where bolum.aktif != 'False' and  bolum.tip = 'Kiracı' or(bolum.tip = 'Kat Maliki' and bolum.kiraci is null )  order by bolum.bagimsiz_id").ToList();
+
+    }
+
+    <div class="card">
+        <div class="card-header header-elements-inline">
+            <h5 class="card-title"><i class="icon-coins mr-2 icon-2x"></i>Aidat Takibi</h5>
+            <div class="header-elements">
+                <div class="list-icons">
+                    <a class="list-icons-item" data-action="collapse"></a>
+                </div>
+            </div>
+        </div>
+        <table id="aidat" class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    @{
+                        int ay = DateTime.Now.Month;
+                        string cssbg = " gecerliay";
+                    }
+                    <th scope="col">No</th>
+                    <th scope="col">Adı Soyadı</th>
+                    <th scope="col" class="@((ay == 1) ? cssbg:"")">Ocak</th>
+                    <th scope="col" class="@((ay == 2) ? cssbg:"")">Şubat</th>
+                    <th scope="col" class="@((ay == 3) ? cssbg:"")">Mart</th>
+                    <th scope="col" class="@((ay == 4) ? cssbg:"")">Nisan</th>
+                    <th scope="col" class="@((ay == 5) ? cssbg:"")">Mayıs</th>
+                    <th scope="col" class="@((ay == 6) ? cssbg:"")">Haziran</th>
+                    <th scope="col" class="@((ay == 7) ? cssbg:"")">Temmuz</th>
+                    <th scope="col" class="@((ay == 8) ? cssbg:"")">Ağustos</th>
+                    <th scope="col" class="@((ay == 9) ? cssbg:"")">Eylül</th>
+                    <th scope="col" class="@((ay == 10) ? cssbg:"")">Ekim</th>
+                    <th scope="col" class="@((ay == 11) ? cssbg:"")">Kasım</th>
+                    <th scope="col" class="@((ay == 12) ? cssbg:"")">Aralık</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+
+                @foreach (var kisi in kisiler)
+                {
+
+                    string kapiNo;
+
+                    using (var context = new MYARCH.DATA.Context.MyArchContext())
+                    {
+                        kapiNo = context.Database.SqlQuery<string>("select daire_numarasi from bagimsiz_bolumler where id='" + kisi.bagimsiz_id + "' ").SingleOrDefault();
+                    }
+                    <tr>
+                        <th style="width:75px;" scope="row">@kapiNo</th>
+
+                        <td>@kisi.isim</td>
+                        @{ for (int i = 1; i <= 12; i++)
+                            {
+
+                                using (var context = new MYARCH.DATA.Context.MyArchContext())
+                                {
+
+                                    int sayi = context.Database.SqlQuery<int>("SELECT count(*) FROM hesap_hareket where bagimsiz_id = '" + kisi.bagimsiz_id + "' and ay = '" + i + "' and yil = '" + DateTime.Now.Year + "' and borclandirma_turu = 'Aidat' and tahsilat_durumu = 'ödendi'").FirstOrDefault();
+
+                                    //string cssbg = "";
+                                    if (DateTime.Now.Month == i)
+                                    {
+                                        cssbg = " gecerliay";
+                                    }
+                                    else
+                                    {
+                                        cssbg = "";
+                                    }
+                                    if (@sayi > 0)
+                                    {
+                                        <td class="text-center @cssbg"><i class="icon-checkmark"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center @cssbg"><i class="fa fa-close"></i></td>
+                                    }
+
+
+                                }
+
+                            }
+
+                        }
+                    </tr>
+
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header header-elements-inline">
+            <h5 class="card-title"><i class="icon-fire mr-2 icon-2x"></i>Yakıt Takibi</h5>
+            <div class="header-elements">
+                <div class="list-icons">
+                    <a class="list-icons-item" data-action="collapse"></a>
+                </div>
+            </div>
+        </div>
+        <table id="akaryakit" class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+
+                    <th scope="col">No</th>
+                    <th scope="col">Adı Soyadı</th>
+                    <th scope="col">1. Dönem</th>
+                    <th scope="col">2. Dönem</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+
+                    foreach (var kisi in kisiler)
+                    {
+
+                        string kapiNo;
+                        int sayi;
+
+                        using (var context = new MYARCH.DATA.Context.MyArchContext())
+                        {
+
+                            kapiNo = context.Database.SqlQuery<string>("select daire_numarasi from bagimsiz_bolumler where id='" + kisi.bagimsiz_id + "' ").SingleOrDefault();
+                        }
+                        <tr>
+                            <td scope="row">@kapiNo</td>
+                            <td>@kisi.isim</td>
+
+                            @{
+                                using (var context = new MYARCH.DATA.Context.MyArchContext())
+                                {
+
+                                    sayi = context.Database.SqlQuery<int>("SELECT count(*) FROM hesap_hareket where bagimsiz_id = '" + kisi.bagimsiz_id + "'  and yil = '" + DateTime.Now.Year + "' and borclandirma_turu = 'Akaryakıt' and tahsilat_durumu = 'ödendi'").FirstOrDefault();
+
+                                    if (@sayi == 2)
+                                    {
+                                        <td class="text-center"><i class="icon-checkmark text-success"></i></td>
+                                        <td class="text-center"><i class="icon-checkmark text-success"></i></td>
+                                        break;
+                                    }
+                                    else if (@sayi == 1)
+                                    {
+                                        <td class="text-center"><i class="icon-checkmark text-success"></i></td>
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                    }
+
+                                }
+                            }
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                        </tr>
+
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $('#akaryakit').DataTable({
+
+            "language": {
+                "emptyTable": "Gösterilecek ver yok.",
+                "processing": "Veriler yükleniyor",
+                "sDecimal": ".",
+                "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                "sLoadingRecords": "Yükleniyor...",
+                "sSearch": "Ara:",
+                "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                "oPaginate": {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+
+
+            }
+        });
+        $('#aidat').DataTable({
+
+            "language": {
+                "emptyTable": "Gösterilecek ver yok.",
+                "processing": "Veriler yükleniyor",
+                "sDecimal": ".",
+                "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                "sLoadingRecords": "Yükleniyor...",
+                "sSearch": "Ara:",
+                "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                "oPaginate": {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+
+
+            }
+        });
+    });
+</script>

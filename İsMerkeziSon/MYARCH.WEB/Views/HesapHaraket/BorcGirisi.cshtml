@@ -1,0 +1,233 @@
+﻿
+@{
+    ViewBag.Title = "BorcGirisi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using MYARCH.DTO.EEntity
+@using MYARCH.CORE.Entities
+@model EBagimsizBolumlerDTO
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Borç Girişi
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kişi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="kisi" data-fouc>
+                                        @*<option>@Model.blok_adi</option>*@
+                                        <optgroup label="">
+                                            @foreach (EBagimsizDetayKisiler kisiler in ViewBag.kisiler)
+                                            {
+                                                <option value="@kisiler.kisi_id">@kisiler.isim</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Bağımsız bolum</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="bagimsizBolumBilgi" value="@Model.blok_adi/@Model.daire_numarasi">
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Bağımsız id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="bagimsizBolum" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="aciklama">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borçlandırma türü</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="">
+                                            @foreach (borc_tipleri tipler in ViewBag.borcTiperi)
+                                            {
+                                                <option value="@tipler.para_birimi">@tipler.borclandirma_turu</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="paraBirimiForm">
+                                <label class="col-lg-2 col-form-label">Para birimi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="paraBirimi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tarih</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="tarih" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Son ödeme tarihi</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="sonOdemeTarih" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="tutarForm">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tutar">
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="BorclandirmaKaydet()">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+    SadeceRakam("#tutar");
+
+    DisiableTrue("paraBirimi")
+    DisiableTrue("bagimsizBolumBilgi")
+
+    $('#tutar').keydown(function (e) {
+        if (e.keyCode == 190)
+            return false;
+
+    });
+
+
+    $('#borclandirmaTuru').on('change', function (e) {
+        var secilenDeger = $("#borclandirmaTuru option:selected").text();
+
+        var secilenDegerId = $("#borclandirmaTuru option:selected").val();
+
+        console.log(secilenDegerId);
+      
+        if (secilenDeger != 'Akaryakıt') {
+            $('#tutarForm').show();
+
+        }
+        if (secilenDeger == 'Akaryakıt') {
+            $('#tutarForm').hide();
+        }
+
+        if (secilenDegerId == "USD") {
+
+            document.getElementById("paraBirimi").value = secilenDegerId;
+        }
+
+        if (secilenDegerId == "TL") {
+
+            document.getElementById("paraBirimi").value = secilenDegerId;
+        }
+       
+
+    });
+
+    function BorclandirmaKaydet() {
+
+        var e = document.getElementById("kisi");
+        var kisiId = e.options[e.selectedIndex].value;
+
+        var bagimsizId = document.getElementById("bagimsizBolum").value;
+        var aciklama = document.getElementById("aciklama").value;
+
+        var e = document.getElementById("borclandirmaTuru");
+        var borclandirmaTuru = e.options[e.selectedIndex].text;
+
+        var tarih = document.getElementById("tarih").value;
+        var sonodemeTarihi = document.getElementById("sonOdemeTarih").value;
+        var tutar = document.getElementById("tutar").value;
+
+        var paraBirimi = document.getElementById("borclandirmaTuru");
+        var paraBirimiDeger = paraBirimi.options[paraBirimi.selectedIndex].value;
+
+        var model = {
+            para_birimi: paraBirimiDeger,
+            kisi_id: kisiId,
+            bagimsiz_id: bagimsizId,
+            aciklama: aciklama,
+            tarih: tarih,
+            sonodeme_tarihi: sonodemeTarihi,
+            borc: tutar,
+            borclandirma_turu: borclandirmaTuru,
+            islem_turu: "Tediye",
+            kasa_id: 0,
+            banka_id: 0
+        };
+
+        if (kisiId == '') {
+            Uyari("error", "Lütfen kişi  seçiniz");
+            return;
+        }
+
+        if (aciklama == '') {
+            Uyari("error", "Lütfen açıklama giriniz");
+            return;
+        }
+        if (borclandirmaTuru == '') {
+            Uyari("error", "Lütfen borçlandırma  tipini seçiniz");
+            return;
+        }
+        if (tarih == '') {
+            Uyari("error", "Lütfen tarih seçiniz");
+            return;
+        }
+        if (sonodemeTarihi == '') {
+            Uyari("error", "Lütfen son odeme tarihini seçiniz");
+            return;
+        }
+
+        //if (tutar == '') {
+        //    Uyari("error", "Lütfen tutar giriniz");
+        //    return;
+        //}
+
+
+        else {
+            Kaydet("/HesapHaraket/KaydetIslem", model, "Kayıt işlemi başarılı", "/Kisiler/Kisi/" + kisiId, "İşlem sırasında bir hata meydana geldi")
+        }
+
+
+    }
+
+
+</script>

@@ -1,0 +1,250 @@
+﻿
+@{
+    ViewBag.Title = "BorclandirmaTuru";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<MYARCH.CORE.Entities.borc_tipleri>
+
+
+
+
+<div id="borcTipiEkle" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Ekle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <label class="col-lg-3 col-form-label">Borçlandırma türü</label>
+                <div class="col-lg-12">
+                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                        <option></option>
+                        <optgroup label="Seçiniz">
+                            <option value="aidat">Aidat</option>
+                            <option value="akaryakit">Akaryakıt</option>
+                            <option value="demirbas">Demirbaş</option>
+                            <option value="demirbas">Ek bütçe</option>
+                            <option value="diger">Diğer</option>
+                        </optgroup>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 col-form-label">Para birimi</label>
+                    <div class="col-lg-12">
+                        <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="paraBirimi" data-fouc>
+                            <option></option>
+                            <optgroup label="Seçiniz">
+                                <option value="TL">TL</option>
+                                <option value="USD">USD</option>
+                                <option value="EURO">EURO</option>
+                            </optgroup>
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="BorcTuruKaydet()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+
+    //SadeceRakam("#daireSayisi");
+    //SadeceRakam("#daireSayisiGuncelle");
+
+    $(function () {
+
+       var borcTipi =  @Html.Raw(Json.Encode(Model));
+        var dataGrid = $("#gridContainer").dxDataGrid({
+            dataSource: borcTipi,
+            loadPanel: {
+                enabled: true,
+
+            },
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            //filterRow: {
+            //    visible: true,
+            //    applyFilter: "auto"
+            //},
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+
+
+                },
+                {
+                    dataField: "borclandirma_turu",
+                    caption: "Borç türü",
+
+
+                },
+                {
+                    dataField: "para_birimi",
+                    caption: "Para birimi",
+                },
+
+            ],
+            //summary: {
+            //    totalItems: [{
+            //        column: "blok_adi",
+            //        summaryType: "count",
+
+            //    },
+
+            //    ]
+            //},
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text:"Borçlandırma Türleri",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            $('#borcTipiEkle').modal('show');
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+         
+   
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+                
+                if (id != null) {
+
+                    Sil("/Tanimlar/BorclandirmaTuruSil",id,"Silme işlemi başarılı","İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+
+
+    function BorcTuruKaydet() {
+        var borcTuru = document.getElementById("borclandirmaTuru");
+        var borcTuruDeger = borcTuru.options[borcTuru.selectedIndex].text;
+
+
+        var paraBirimi = document.getElementById("paraBirimi");
+        var paraBirimiDeger = paraBirimi.options[paraBirimi.selectedIndex].value;
+
+
+        if (borcTuruDeger != '' && paraBirimiDeger != '') {
+            var model = {
+                borclandirma_turu: borcTuruDeger,
+                para_birimi: paraBirimiDeger
+            };
+
+            Kaydet("/Tanimlar/BorclandirmaTuruKaydet", model, "Kayıt işlemi başarılı", "/Tanimlar/BorclandirmaTuru", "İşlem sırasında bir hata meydana geldi")
+        }
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+    }
+
+
+    function BlokGuncelle() {
+        var blokAdiGuncelle = document.getElementById("blokAdiGuncelle").value;
+        var daireSayisi = document.getElementById("daireSayisiGuncelle").value;
+        var id = document.getElementById("id").value;
+
+        var model = {
+            blok_adi: blokAdiGuncelle,
+            daire_sayisi: daireSayisi,
+            id: id
+        };
+
+
+        if (model != null || model != '') {
+            Guncelle("/Tanimlar/BlokGuncelle", model,"Güncelleme işlemi başarılı","/Tanimlar/Bloklar", "İşlem sırasında bir hata meydana geldi")
+        }
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+
+    }
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+                <div id="gridContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

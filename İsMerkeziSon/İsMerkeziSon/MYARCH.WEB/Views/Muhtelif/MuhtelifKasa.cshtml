@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewBag.Title = "MuhtelifKasa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <div>
+                                <h5 class="card-title">Muhtelif İşlemler</h5>
+                                <h8 class="card-title">Kasa hareketi</h8>
+                            </div>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem</label>
+                                <div class="col-lg-10" id="islem">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="gelir" class="form-input-styled" name="deger" checked data-fouc>
+                                            Gelir
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="gider" name="deger" data-fouc>
+                                            Gider
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem türü</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="islemTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="seçiniz">
+                                            <option>Nakit</option>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">İşlem adı</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="islemAdi" data-fouc>
+                                        <option></option>
+                                        <optgroup label="seçiniz">
+                                            @foreach (muhtelif_baslikler item in ViewBag.Basliklar)
+                                            {
+                                                <option value="@item.baslik_kodu">@item.baslik_adi</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="aciklama">
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Seçim</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="secim">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Evrak no</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="evrakNo">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.Partial("_KasalarPartial")
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tutar</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="tutar">
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="button" onclick="Kaydet()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                                <button type="button" class="btn btn-danger" onclick="geriGit();">Vazgeç <i class="icon-cancel-square ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+
+    NoktaEngel("#tutar");
+    DisiableTrue("secim");
+
+    $('#islemAdi').on('change', function () {
+        var baslikKodu = this.value;
+        
+        if (baslikKodu != '') 
+        {
+            $.ajax({
+                url: "/Muhtelif/ToplamaEkleSecim",
+                type: "POST",
+                data: { baslikKodu: baslikKodu },
+                success: function (response) {
+                
+                    if (response != null) {
+                        $("#secim").val(response);
+                    }
+                    else {
+                        Uyari("error", "Bu  işlem koduna ait ");
+                    }
+                }
+            });
+        }
+        else {
+            Console.log("error", "id değeri bulunamadı");
+        }
+    });
+
+    function Kaydet() {
+        var muhtelifTipi = document.querySelector('input[name="deger"]:checked').value;
+
+        var islemTuru = document.getElementById("islemTuru");
+        var islemTuruDeger = islemTuru.options[islemTuru.selectedIndex].text;
+
+        var islemAdi = document.getElementById("islemAdi");
+        var islemAdiDeger = islemAdi.options[islemAdi.selectedIndex].text;
+        var islemAdiKodu = islemAdi.options[islemAdi.selectedIndex].value;
+
+        var aciklama = document.getElementById("aciklama").value;
+        var evrakNo = document.getElementById("evrakNo").value;
+        var secim = document.getElementById("secim").value;
+        var tutar = document.getElementById("tutar").value;
+
+        var kasa = document.getElementById("kasa");
+        var kasaDeger = kasa.options[kasa.selectedIndex].text;
+        var kasaDegerId = kasa.options[kasa.selectedIndex].value;
+
+
+
+        if (islemTuruDeger == "") {
+            Uyari("error", "İşlem türünü seçiniz");
+            return;
+        }
+
+        if (islemAdiDeger == "") {
+            Uyari("error", "İşlem adını seçiniz");
+            return;
+        }
+
+        if (kasaDeger == "") {
+            Uyari("error", "Kasa seçiniz");
+            return;
+        }
+
+        if (document.getElementById("aciklama").value == '') {
+            Uyari("error", "Açıklama giriniz");
+            return;
+        }
+
+        if (document.getElementById("evrakNo").value == '') {
+            Uyari("error", "Evrak no değerini giriniz");
+            return;
+        }
+        if (document.getElementById("tutar").value == '') {
+            Uyari("error", "Tutar giriniz");
+            return;
+        }
+
+        else {
+            var model = {
+                islem_turu: islemTuruDeger,
+                islem_adi: islemAdiDeger,
+                islem_no: islemAdiKodu,
+                aciklama: aciklama,
+                evrak_no: evrakNo,
+                muhtelif_tipi: muhtelifTipi,
+                tutar: tutar,
+                kasa_id: kasaDegerId,
+                toplama_katilim: secim
+
+
+            }
+
+            $.ajax({
+                url: "/Muhtelif/MuhtelifKasaKaydetIslem",
+                type: "POST",
+                data: model,
+                success: function (response) {
+                    if (response == true) {
+                        Uyari("success", "İşlem başarılı");
+                        setTimeout(function () {
+                            window.location.href = "/Muhtelif/Liste";
+                        }, 2000);
+                    }
+
+                    else {
+                        Uyari("error", "İşlem sırasında bir hata meydana geldi");
+
+                    }
+                }
+            })
+        }
+
+    }
+</script>
+

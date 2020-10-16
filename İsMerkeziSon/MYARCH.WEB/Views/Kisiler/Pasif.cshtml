@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "Pasif";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var kisier;
+
+    $(function () {
+
+        kisiler =  @Html.Raw(Json.Encode(Model));
+        var dataGrid = $("#kisiler").dxDataGrid({
+            dataSource: kisiler,
+            loadPanel: {
+                enabled: true,
+
+           },
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 15 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            //editing: {
+            //    mode: "popup",
+
+            //    allowDeleting: true,
+
+            //},
+
+
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+
+                },
+                {
+                    dataField: "isim",
+                    caption: "Adı soyadı",
+                },
+             
+                {
+                    dataField: "tc",
+                    caption: "Tc",
+                },
+             
+                {
+                    dataField: "eposta",
+                    caption: "E-posta",
+                },
+                {
+                    dataField: "tel1",
+                    caption: "Telefon",
+                },
+                {
+                    dataField: "adres",
+                    caption: "Adres",
+                },
+
+            ],
+
+            summary: {
+                totalItems: [{
+                    column: "isim",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+            //onCellPrepared: function (e) {
+            //    if (e.rowType === "data" && (e.data.durumu !== null )) {
+            //       // e.cellElement.css("color", e.data.durumu ==='Kiracı' ? "green" : "red");
+            //        // Tracks the `Amount` data field
+            //        e.cellElement.find(".dx-link-delete").remove();
+
+            //    }
+            //},
+
+            //onToolbarPreparing: function (e) {
+            //    var toolbarItems = e.toolbarOptions.items;
+            //    var searchPanel = $.grep(toolbarItems, function (item) {
+            //        return item.name === "searchPanel";
+            //    })[0];
+            //    searchPanel.location = "after";
+
+            //    toolbarItems.push({
+            //        text: "Kişiler",
+            //        location: "before"
+            //    });
+
+            //    toolbarItems.push({
+            //        widget: "dxButton",
+            //        options: {
+            //            icon: "plus",
+            //            onClick: function () {
+            //                window.location = "/Kisiler/Kaydet ";
+            //            },
+            //            text: "Yeni",
+            //            height: 34,
+            //            width: 130,
+            //        },
+            //        location: "before"
+            //    });
+            //},
+
+
+            //onSelectionChanged: function (selectedItems) {
+            //    let data = selectedItems.selectedRowsData[0];
+            //    if (data) {
+            //        window.location = "/KisiDuzenle/" + data.id;
+            //    }
+            //},
+
+            //onRowRemoving: function (e) {
+
+            //    var id = e.data["id"];
+
+            //    Sil("/Kisiler/KisiSil/", id, "Silme işlemi başarılı", "işlem sırasında bir hata meydana geldi")
+            //},
+
+
+        });
+
+    });
+
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="kisiler">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

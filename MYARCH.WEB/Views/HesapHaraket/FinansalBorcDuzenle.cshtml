@@ -1,0 +1,230 @@
+﻿
+@{
+    ViewBag.Title = "FinansalBorcDuzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.DTO.EEntity
+@using MYARCH.CORE.Entities
+@model MYARCH.DTO.EEntity.EFinansalBorcDuzenle
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Boç düzenle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tarih</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="tarih" value="@Model.tarih.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Son ödeme tarihi</label>
+                                <div class="col-lg-10">
+                                    <input type="date" class="form-control" id="sonOdemeTarihi" value="@Model.sonodeme_tarihi.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+
+                            @*<div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Borçlandırma türü</label>
+                                    <div class="col-lg-10">
+                                        <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                                            <option></option>
+                                            <optgroup label="Daire no">
+                                                <option value="aidat" @(Model.borclandirma_turu == "Aidat" ? "selected" : "" )>Aidat</option>
+                                                <option value="demirbas" @(Model.borclandirma_turu == "Demirbaş" ? "selected" : "" )>Demirbaş</option>
+                                                <option value="demirbas" @(Model.borclandirma_turu == "Ek bütçe" ? "selected" : "" )>Ek bütçe</option>
+                                                <option value="akaryakit" @(Model.borclandirma_turu == "Akaryakıt" ? "selected" : "" )>Akaryakıt</option>
+
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borçlandırma türü</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="borclandirmaTuru" data-fouc>
+                                        <option></option>
+                                        <optgroup label="">
+                                            @foreach (borc_tipleri tipler in ViewBag.borcTiperi)
+                                            {
+                                                <option value="@tipler.para_birimi" @(Model.borclandirma_turu == tipler.borclandirma_turu ? "selected" : "" )>@tipler.borclandirma_turu</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Para birimi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="paraBirimi" value="@Model.para_birimi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açıklama</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="aciklama" value="@Model.aciklama">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Borç</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="borc" value="@Model.borc">
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">kisiId</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kisi_id" value="@Model.kisi_id">
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="button" onclick="BorcDuzenle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+    SadeceRakam("#borc");
+
+    DisiableTrue("paraBirimi")
+    $('#borc').keydown(function (e) {
+        if (e.keyCode == 190)
+            return false;
+
+    });
+
+    $('#borclandirmaTuru').on('change', function (e) {
+        var secilenDeger = $("#borclandirmaTuru option:selected").text();
+        var secilenDegerId = $("#borclandirmaTuru option:selected").val();
+
+        if (secilenDegerId == "USD") {
+
+            document.getElementById("paraBirimi").value = secilenDegerId;
+        }
+
+        if (secilenDegerId == "TL") {
+
+            document.getElementById("paraBirimi").value = secilenDegerId;
+        }
+
+    });
+
+    function BorcDuzenle() {
+        var paraBirimi = document.getElementById("borclandirmaTuru");
+        var paraBirimiDeger = paraBirimi.options[paraBirimi.selectedIndex].value;
+
+        var tarih = document.getElementById("tarih").value;
+        var sonodemeTarihi = document.getElementById("sonOdemeTarihi").value;
+        var e = document.getElementById("borclandirmaTuru");
+        var borclandirmaTuru = e.options[e.selectedIndex].text;
+        var borc = document.getElementById("borc").value;
+        var kisiId = document.getElementById("kisi_id").value;
+        var aciklama = document.getElementById("aciklama").value;
+
+        var hesapHareketId = @ViewContext.RouteData.Values["id"];
+
+        var model = {
+            tarih: tarih,
+            sonodeme_tarihi: sonodemeTarihi,
+            borclandirma_turu: borclandirmaTuru,
+            borc: borc,
+            kisi_id: kisiId,
+            id: hesapHareketId,
+            aciklama: aciklama,
+            para_birimi: paraBirimiDeger
+        };
+
+
+
+        if (tarih == '') {
+            Uyari("error", "Lütfen tarih seçiniz");
+            return;
+        }
+        if (sonodemeTarihi == '') {
+            Uyari("error", "Lütfen son ödeme tarihini seçiniz");
+            return;
+        }
+        if (sonodemeTarihi == '') {
+            Uyari("error", "Lütfen son ödeme tarihini seçiniz");
+            return;
+        }
+
+        if (aciklama == '') {
+            Uyari("error", "Lütfen açıklama giriniz");
+            return;
+        }
+
+
+        else {
+            $.ajax({
+                url: "/HesapHaraket/FinansalBorcGuncelle",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(model),
+                success: function (response) {
+
+                    if (response == "-1") {
+                        Uyari("warning", "düzenleme yapabilmek için bu borçlandırmaya ait tahsilatları silmeniz gerekmekredir");
+                        return;
+                    }
+
+                    if (response == true) {
+                        Uyari("success", "işlem başarılı");
+                        setTimeout(function () {
+
+                            window.location.href = "/HesapHaraket";
+
+                        }, 1000);
+                        return;
+                    }
+
+                    else {
+                        Uyari("error", "Hata meydana geldi");
+                    }
+
+                }
+            });
+        }
+
+
+    }
+</script>

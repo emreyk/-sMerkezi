@@ -1,0 +1,234 @@
+﻿
+@{
+    ViewBag.Title = "SayacTipleri";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "Bloklar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model List<MYARCH.CORE.Entities.anasayac_ortak_dagitim>
+
+
+
+
+<div id="ortakAlanEkle" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Ortak alan dağıtım adı</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Ortak alan dagıtım şekli</label>
+                    <input type="text" class="form-control" id="ortakAlanAdi">
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="OrtakAlanKaydet()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ortakAlanGuncelleModal" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Ortak alan dağıtım  güncelle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group" style="display:none">
+                    <label>id</label>
+                    <input type="text" class="form-control" id="id">
+                </div>
+                <div class="form-group">
+                    <label>Sayaç tipi</label>
+                    <input type="text" class="form-control" id="ortakAlanGuncelle">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="OrtakAlanGuncelle()">Güncelle</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+
+    $(function () {
+
+       var bloklar =  @Html.Raw(Json.Encode(Model));
+        var dataGrid = $("#gridContainer").dxDataGrid({
+            dataSource: bloklar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+
+
+                },
+                {
+                    dataField: "ortak_dagitim_adi",
+                    caption: "Ortak Alan Dagıtım Şekli",
+
+
+                },
+
+                {
+                    caption: "",
+                    width: 120,
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                    //cssClass: "text-center",
+                    cellTemplate: function (container, options) {
+                        $('<button type="button" onclick="test()" class="btn btn-primary">Düzenle</button>').appendTo(container);
+                    }
+                }
+
+            ],
+            summary: {
+                totalItems: [{
+                    column: "ortak_dagitim_adi",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+                toolbarItems.push({
+                    text: "Ortak alan",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            $('#ortakAlanEkle').modal('show');
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                
+                    $('#ortakAlanGuncelleModal').modal('show');
+                    $('#ortakAlanGuncelle').val(data.ortak_dagitim_adi);
+                    $('#id').val(data.id);
+
+
+
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+
+                if (id != null) {
+
+                    Sil("/Tanimlar/OrtakAlanSil",id,"Silme işlemi başarılı","İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+
+
+</script>
+
+<script src="~/Scriptler/Tanimlar/AnaSayac.js">
+    SayacTipiKaydet();
+    SayacTipiGuncelle();
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="gridContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

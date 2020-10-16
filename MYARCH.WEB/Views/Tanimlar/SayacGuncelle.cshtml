@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "SayacGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "PersonelGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using MYARCH.DTO.EEntity
+@model MYARCH.DTO.EEntity.EAnasayacDTO
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Ana Sayaç Düzenle
+                            </h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" value="@Model.id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sayacAdiGuncelle" value="@Model.sayac_adi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tipi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="sayacTipleriGuncelle" data-fouc>
+                                        <option>@Model.sayac_tipi</option>
+                                        <optgroup label="Sayaç tipi">
+                                            @foreach (ESayacTipiDTO sayaclarTip in ViewBag.SayacBilgiler)
+                                            {
+                                                <option value="@sayaclarTip.id">@sayaclarTip.sayac_tipi</option>
+                                            }
+
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Tesisat No</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="@Model.tesisat_no" id="tesisatNoGuncelle">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Ortak Alan Dağıtım Şekli</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçiniz" class="form-control form-control-select2" id="sayacDagilimGuncelle" data-fouc>
+                                        <option>@Model.ortak_alan_dagilim</option>
+                                        <optgroup label="Ortak Alan Dağıtım Şekli">
+                                            @foreach (ESayacOrtakDagitim sayaclarOrtakAlan in ViewBag.sayacOrtakAlan)
+                                            {
+                                                <option value="@sayaclarOrtakAlan.id">@sayaclarOrtakAlan.ortak_dagitim_adi</option>
+                                            }
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Ortak Alan Yüzdesi</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="@Model.ortak_alan_yuzde" id="ortakAlanYuzdesiGuncelle">
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-primary" onclick="AnaSayacGuncelle()">Güncelle <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scriptler/Tanimlar/AnaSayac.js">
+    AnaSayacGuncelle();
+</script>

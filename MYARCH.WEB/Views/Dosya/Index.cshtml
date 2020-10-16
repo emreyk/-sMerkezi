@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+@model List<kisiler>
+
+@*<div class="form-group">
+    <label>Kişi seçimi</label>
+    <select data-placeholder="Kişi seçiniz" class="form-control form-control-select2" id data-fouc>
+        <option></option>
+        @foreach (var item in Model)
+        {
+            <option value="@item.id">@item.kullanici_adi</option>
+        }
+    </select>
+</div>*@
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <h5 class="card-title">Multiple files</h5>
+        <div class="header-elements">
+            <div class="list-icons">
+                <a class="list-icons-item" data-action="collapse"></a>
+                <a class="list-icons-item" data-action="reload"></a>
+                <a class="list-icons-item" data-action="remove"></a>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="card-body">
+
+        <button type="button" id="uploadfiles" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+        <p class="font-weight-semibold">Yüklemek istediğiniz dosyları seçiniz</p>
+        <form action="/Dosya/DosyaKaydet" class="dropzone" enctype="multipart/form-data" id="dropzone_multiple">
+            <div class="form-group row" style="display:none">
+                <label class="col-lg-2 col-form-label">id</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="tutar">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    Dropzone.autoDiscover = false;
+
+    var myDropzone = new Dropzone(".dropzone", {
+        autoProcessQueue: false,
+        parallelUploads: 10 // Number of files process at a time (default 2)
+    });
+
+    $('#uploadfiles').click(function () {
+        var paraBirimi = document.getElementById("paraBirimi");
+        var paraBirimiDeger = paraBirimi.options[paraBirimi.selectedIndex].text;
+
+        myDropzone.processQueue();
+    });
+
+</script>

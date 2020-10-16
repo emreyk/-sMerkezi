@@ -1,0 +1,548 @@
+﻿
+@{
+    ViewBag.Title = "Kisi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model dynamic
+@using MYARCH.DTO.EEntity
+
+<div class="row">
+    <div class="col-xl-7">
+
+        <!-- Traffic sources -->
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h6 class="card-title">@Model.kisiler.isim</h6>
+
+            </div>
+
+            <div class="card-body whiteboard py-0" style="margin-top: 0;margin-bottom: 0;">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="icon-user-plus"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">TC kimlik no</div>
+                                <span class="text-muted">@Model.kisiler.tc</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="dx-icon-email"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">E-posta</div>
+                                <span class="text-muted"> @Model.kisiler.eposta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="icon-phone2"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Telefon Numarası</div>
+                                <span class="text-muted">@Model.kisiler.tel1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <hr />
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="icon-bookmark"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Öğrenim Durumu</div>
+                                <span class="text-muted">@Model.kisiler.ogrenim_durumu</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="icon-briefcase"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Meslek</div>
+                                <span class="text-muted">@Model.kisiler.meslek</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="d-flex align-items-center justify-content-center2 mb-2">
+                            <span class="btn border-teal text-teal rounded-round border-2 btn-icon mr-2">
+                                <i class="icon-location3"></i>
+                            </span>
+                            <div>
+                                <div class="font-weight-semibold ustYaziler">Adres</div>
+                                <span class="text-muted">@Model.kisiler.adres</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <!-- /traffic sources -->
+
+    </div>
+
+    <div class="col-xl-5">
+
+        <!-- Sales stats -->
+        @*<div class="card" style="height:150px;">
+            <div class="card-header header-elements-inline">
+                <h6 class="card-title">Notlar</h6>
+                <div class="header-elements">
+
+                </div>
+            </div>
+            <div class="chart mb-2" id="app_sales"><svg width="650.078125" height="323"><g transform="translate(50,5)"></g></svg></div>
+
+        </div>*@
+        <!-- /sales stats -->
+        <!-- Daily sales -->
+        <div class="card">
+            <div class="card-header header-elements-inline" style="margin:0;padding:0">
+                <h6 class="card-title">Toplam bakiye</h6>
+
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table text-nowrap tabletoplambakiye">
+                    <thead>
+                        <tr>
+                            <th>Bakiye Türü</th>
+                            <th>TL Bakiyesi</th>
+                            <th>USD Bakiyesi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        <tr>
+                            <td class="font-weight-semibold text-danger">Borç</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <h6 class="font-weight-semibold mb-0">@Model.kisilerTlBakiye.borc_tl TL</h6>
+                                </div>
+                            </td>
+                            <td>
+                                <h6 class="font-weight-semibold mb-0">$ @Model.kisilerDolarBakiye.borc_dolar</h6>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="font-weight-semibold text-success">Alacak</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h6 class="font-weight-semibold mb-0">@Model.kisilerTlBakiye.alacak_tl TL</h6>
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h6 class="font-weight-semibold mb-0">$ @Model.kisilerDolarBakiye.alacak_dolar</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-semibold text-primary">Bakiye</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h6 class="font-weight-semibold mb-0">@(Model.kisilerTlBakiye.borc_tl - Model.kisilerTlBakiye.alacak_tl) TL</h6>
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h6 class="font-weight-semibold mb-0">$ @(Model.kisilerDolarBakiye.borc_dolar - Model.kisilerDolarBakiye.alacak_dolar)</h6>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+
+
+    var kisiBorclari;
+    var paraBirimi;
+
+    $(function () {
+
+         kisiBorclari = @Html.Raw(Json.Encode(Model.kisiBorclari));
+
+        var sonodemetarih = "";
+        var sonOdemeTarih = "";
+
+        for (i = 0; i < kisiBorclari.length; i++) {
+
+            sontarih = moment(kisiBorclari[i]["sonodeme_tarihi"]).format("YYYY-MM-DD");
+
+
+            kisiBorclari[i]["sonodemetarih"] = sontarih;
+
+        }
+
+
+
+
+        //console.log(kisiBorclari);
+       var dataGrid = $("#kisiBorc").dxDataGrid({
+           dataSource: kisiBorclari,
+
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 10},
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            loadPanel: {
+                enabled: true,
+
+            },
+
+            onCellPrepared: function (e) {
+                if (e.rowType === "data" && e.column.dataField === "BAKIYE") {
+                    e.cellElement.css("color", "#d82b2b");
+                }
+
+                if (e.rowType === "data" && (e.data.islem_turu == 'alacak dekontu' || e.data.tahsilat_durumu == 'ödendi')) {
+
+                    e.cellElement.find(".dx-button-danger").remove();
+                }
+
+                if (e.rowType === "data" && e.column.dataField === "tahsilat_durumu") {
+                    if (e.data.tahsilat_durumu === 'ödendi') {
+                        e.cellElement.css("color", "green");
+                    }
+                    if (e.data.tahsilat_durumu === 'ödenmedi') {
+                        e.cellElement.css("color", "red");
+                    }
+                    if (e.data.tahsilat_durumu === 'eksik tahsilat') {
+                        e.cellElement.css("color", "orange");
+                    }
+
+                }
+
+            },
+
+
+
+            columns: [
+
+                {
+                       dataField: "id",
+                       caption: "id",
+                       visible: false,
+                },
+
+                {
+                       dataField: "donem",
+                       caption: "Donem",
+                },
+
+                {
+                dataField: "blok_adi",
+                    caption: "Blok adı",
+                },
+                {
+                    dataField: "daire_numarasi",
+                    caption: "Daire no",
+                },
+                {
+                    dataField: "islem_turu",
+                    caption: "İşlem türü",
+                },
+                {
+                    dataField: "borclandirma_turu",
+                    caption: "Borçlandırma türü",
+                },
+                {
+                    dataField: "aciklama",
+                    caption: "Acıklama",
+
+                },
+
+                {
+                    dataField: "tahsilat_durumu",
+                    caption: "Tahsilat durumu",
+                },
+                {
+                    dataField: "borc",
+                    caption: "Borç",
+                },
+                {
+                    dataField: "alacak",
+                    caption: "Alacak",
+                },
+                {
+                    dataField: "para_birimi",
+                    caption: "Para Birimi",
+                },
+
+                {
+                    dataField: "BAKIYE",
+                    caption: "Bakiye",
+                },
+
+
+
+             @{
+                  var rutbe = ((SessionContext)Session["SessionContext"]).rutbe;
+
+                  if (rutbe =="admin")
+                  {
+                      <Text>
+
+                 {
+                    dataField: "",
+                    caption: "",
+                    cellTemplate: function (container, options) {
+                        $('<div />').dxButton(
+                            {
+                                text: 'tahsilat',
+                                height: 30,
+                                width: 50,
+                                type: 'danger',
+                                onClick: function (args) {
+                                    var hhId = options.data.id;
+
+                                    var donem = options.data.donem;
+
+                                  
+
+                                    if (donem == '2') {
+                                      
+                                             $.ajax({
+                                               url: "/hesapharaket/AkaryakitDonemKontrol",
+                                               type: "post",
+                                               data: { kisi_id: @ViewContext.RouteData.Values["id"] },
+                                                success: function (response) {
+                                                    if (response == false) {
+                                                        console.log(response);
+                                                        Uyari("error", "birinci dönem akaryakıt tahsilatını yapmadınız");
+                                                        return null;
+                                                    }
+
+                                                    else {
+                                                        window.location.href = "/HesapHaraket/TahsilEtId/" + hhId;
+                                                    }
+
+                                                }
+                                            });
+                                    }
+                                    else {
+                                        window.location.href = "/HesapHaraket/TahsilEtId/" + hhId;
+                                    }
+                                }
+                            }
+                        ).appendTo(container);
+                    }
+
+                },
+                     </Text>
+                  }
+              }
+
+
+
+            ],
+
+
+
+
+            onToolbarPreparing: function (e) {
+
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Kişi Hareketleri",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                widget: "dxButton",
+                options: {
+                    //icon: "plus",
+                    onClick: function () {
+
+                        var kisiId = @ViewContext.RouteData.Values["id"];
+
+                        if (kisiId != '') {
+
+                            $.ajax({
+                                url: "/Kisiler/Kisi",
+                                type: "POST",
+                                data: { id: kisiId, paraBirimi: 'USD' },
+                                success: function (response) {
+                                    console.log(response);
+                                    $("#kisiBorc").dxDataGrid("instance").option("dataSource", response);
+
+                                }
+                            });
+                        }
+
+                        else {
+                            Uyari("error", "id değerine ulasılamadı");
+                        }
+
+                    },
+                    text: "Dolar Hareket",
+                    height: 30,
+                    width: 140,
+                },
+                location: "before"
+                });
+
+
+
+
+            toolbarItems.push({
+                widget: "dxButton",
+                options: {
+                    //icon: "plus",
+                    onClick: function () {
+
+                        var kisiId = @ViewContext.RouteData.Values["id"];
+
+                        if (kisiId != '') {
+                            $.ajax({
+                                url: "/Kisiler/Kisi",
+                                type: "POST",
+                                data: { id: kisiId, paraBirimi: 'TL' },
+                                success: function (response) {
+                                    console.log(response);
+                                    $("#kisiBorc").dxDataGrid("instance").option("dataSource", kisiBorclari);
+
+                                }
+                            });
+                        } else {
+                            Uyari("error", "id değerine ulasılamadı");
+                        }
+
+                    },
+                    text: "TL Hareket",
+                    height: 30,
+                    width: 120,
+                },
+                location: "before"
+            });
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+
+    });
+
+
+
+    function BlokKaydet() {
+        var blokAdi = document.getElementById("blokAdi").value;
+        var daireSayisi = document.getElementById("daireSayisi").value;
+
+
+
+        var model = {
+            blok_adi: blokAdi,
+            daire_sayisi: daireSayisi
+        };
+
+
+        if (model != null || model != '')
+        {
+            Kaydet("/Tanimlar/BlokKaydet", model,  "Kayıt işlemi başarılı", "/Tanimlar/Bloklar","İşlem sırasında bir hata meydana geldi")
+        }
+
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+    }
+
+
+    function BlokGuncelle() {
+        var blokAdiGuncelle = document.getElementById("blokAdiGuncelle").value;
+        var daireSayisi = document.getElementById("daireSayisiGuncelle").value;
+        var id = document.getElementById("id").value;
+
+        var model = {
+            blok_adi: blokAdiGuncelle,
+            daire_sayisi: daireSayisi,
+            id: id
+        };
+
+
+        if (model != null || model != '') {
+            Guncelle("/Tanimlar/BlokGuncelle", model,"Güncelleme işlemi başarılı","/Tanimlar/Bloklar", "İşlem sırasında bir hata meydana geldi")
+        }
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+
+    }
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="kisiBorc">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

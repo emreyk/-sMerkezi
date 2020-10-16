@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "Banka";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model List<MYARCH.CORE.Entities.banka>
+
+<script>
+    $(function () {
+
+        var banka =  @Html.Raw(Json.Encode(Model));
+
+        var sontarih = "";
+        var sonOdemeTarih = "";
+
+        for (i = 0; i < banka.length; i++) {
+
+            sontarih = moment(banka[i]["acilis_tarihi"]).format("YYYY-MM-DD");
+
+
+            banka[i]["sonTarih"] = sontarih;
+
+        }
+
+       var dataGrid = $("#banka").dxDataGrid({
+           dataSource: banka,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+            loadPanel: {
+                enabled: true,
+
+            },
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+
+
+                },
+                {
+                    dataField: "acilis_bakiye",
+                    caption: "Açılış bakiyesi",
+                },
+                {
+                    dataField: "banka_adi",
+                    caption: "Banka adı",
+                },
+                {
+                    dataField: "girentutar_tl",
+                    caption: "Giren tutar tl",
+
+                },
+                {
+                    dataField: "cikantutar_tl",
+                    caption: "Çıkan tutar tl",
+                },
+
+                {
+                    dataField: "bakiye_tl",
+                    caption: "Bakiye tl",
+                },
+                {
+                    dataField: "girentutar_dolar",
+                    caption: "Giren tutar dolar",
+
+                },
+                {
+                    dataField: "cikantutar_dolar",
+                    caption: "Çıkan tutar dolar",
+                },
+
+                {
+                    dataField: "bakiye_dolar",
+                    caption: "Bakiye dolar",
+                },
+
+
+            ],
+         
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Bankalar",
+                    location: "before"
+                });
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location = "/Tanimlar/BankaKaydet ";
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                    window.location = "/Tanimlar/BankaGuncelle/"+data.id;
+                }
+            },
+         
+            onCellPrepared: function (e) {
+                if (e.rowType === "data" && e.column.dataField === "girentutar_tl") {
+                    e.cellElement.css("color", "#00a30d");
+                }
+                if (e.rowType === "data" && e.column.dataField === "cikantutar_tl") {
+                    e.cellElement.css("color", "#d8002b");
+                }
+
+                if (e.rowType === "data" && e.column.dataField === "girentutar_dolar") {
+                    e.cellElement.css("color", "#00a30d");
+                }
+                if (e.rowType === "data" && e.column.dataField === "cikantutar_dolar") {
+                    e.cellElement.css("color", "#d8002b");
+                }
+            },
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+</script>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="banka">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

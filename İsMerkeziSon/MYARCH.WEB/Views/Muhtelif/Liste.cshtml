@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewBag.Title = "Liste";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.CORE.Entities
+@model List<muhtelif_islemler>
+
+<script>
+        $(function () {
+
+
+            var muhtelifIslemler =  @Html.Raw(Json.Encode(Model));
+            var sontarih = "";
+          
+            for (i = 0; i < muhtelifIslemler.length; i++) {
+
+                sontarih = moment(muhtelifIslemler[i]["tarih"]).format("YYYY-MM-DD");
+                muhtelifIslemler[i]["sonTarih"] = sontarih;
+            }
+
+        var dataGrid = $("#muhtelifContainer").dxDataGrid({
+            dataSource: muhtelifIslemler,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 10 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+            loadPanel: {
+                enabled: true,
+
+            },
+            columns: [
+
+                {
+                    dataField: "refno",
+                    caption: "Refno",
+
+                },
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+              
+             
+                {
+                    dataField: "sonTarih",
+                    caption: "Tarih",
+                },
+
+                {
+                    dataField: "islem_turu",
+                    caption: "İşlem Türü",
+                },
+            
+                {
+                    dataField: "islem_adi",
+                    caption: "işlem Adı",
+                },
+
+                {
+                    dataField: "muhtelif_tipi",
+                    caption: "Tip",
+                },
+                {
+                    dataField: "para_birimi",
+                    caption: "Para Birimi",
+                },
+              
+                {
+                    dataField: "aciklama",
+                    caption: "Açıklama",
+                },
+              
+                {
+                    dataField: "tutar",
+                    caption: "Tutar",
+                },
+                {
+                    dataField: "kasa_id",
+                    caption: "Kasa id",
+                    visible: false,
+                },
+                {
+                    dataField: "banka_id",
+                    caption: "Banka id",
+                    visible: false,
+                },
+
+            ],
+          
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Muhtelif İşlemler",
+                    location: "before"
+                });
+
+            
+            },
+
+            onCellPrepared: function (e) {
+              
+
+                if (e.rowType === "data" && e.column.dataField === "tutar") {
+                    if (e.data.muhtelif_tipi === 'gider') {
+                        e.cellElement.css("color", "red");
+                    }
+                    if (e.data.muhtelif_tipi === 'gelir') {
+                        e.cellElement.css("color", "green");
+                    }
+                   
+
+                }
+            },
+
+
+         
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+              
+                if (data.islem_turu == "Nakit") {
+
+                    window.location.href = "/Muhtelif/KasaGuncelle/" + data.id;
+                }
+                else {
+                    window.location.href = "/Muhtelif/BankaGuncelle/" + data.id; 
+                }
+            },
+            onRowRemoving: function (e) {
+
+                var refno = e.data["refno"];
+                var islemTuru = e.data["islem_turu"];
+                var kasaId = e.data["kasa_id"];
+                var bankaId = e.data["banka_id"];
+                var paraBirimi = e.data["para_birimi"];
+
+                if (refno != '' && islemTuru != '' && paraBirimi != '' && kasaId != null && bankaId != null) {
+                    alert();
+                    $.ajax({
+                        url: "/Muhtelif/MuhtelifIslemSil",
+                        type: "POST",
+                        data: {
+                            refno: refno,
+                            islem_turu: islemTuru,
+                            kasa_id: kasaId,
+                            banka_id: bankaId,
+                            para_birimi: paraBirimi
+                        },
+                        success: function (response) {
+                            if (response == true) {
+
+                                Uyari("success", "Silme işlemi başarılı");
+                            }
+                            else {
+                                Uyari("error", "işlem sırasında meydana geldi");
+
+                            }
+                        }
+                    });
+
+                }
+                else {
+                    console.log("yollanan model kısmında bos degerler var.");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="muhtelifContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "Kasa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model List<MYARCH.CORE.Entities.kasa>
+
+<script>
+    $(function () {
+
+
+
+        var bankalar =  @Html.Raw(Json.Encode(Model));
+
+        var sontarih = "";
+        var sonOdemeTarih = "";
+
+        for (i = 0; i < bankalar.length; i++) {
+
+            sontarih = moment(bankalar[i]["acilis_tarihi"]).format("YYYY-MM-DD");
+         
+
+            bankalar[i]["sonTarih"] = sontarih;
+          
+        }
+
+       var dataGrid = $("#kasa").dxDataGrid({
+           dataSource: bankalar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 5 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+
+            editing: {
+                mode: "popup",
+            },
+
+            loadPanel: {
+                enabled: true,
+
+            },
+
+            columns: [
+
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+                {
+                    dataField: "sonTarih",
+                    caption: "Açılış tarihi",
+                },
+                {
+                    dataField: "acilis_bakiye",
+                    caption: "Açılış bakiyesi",
+                },
+                {
+                    dataField: "kasa_adi",
+                    caption: "Kasa adı",
+                },
+                {
+                    dataField: "girentutar_tl",
+                    caption: "Giren tutar tl",
+
+                },
+                {
+                    dataField: "cikantutar_tl",
+                    caption: "Çıkan tutar tl",
+                },
+
+                {
+                    dataField: "bakiye_tl",
+                    caption: "Bakiye tl",
+                },
+                {
+                    dataField: "girentutar_dolar",
+                    caption: "Giren tutar dolar",
+
+                },
+                {
+                    dataField: "cikantutar_dolar",
+                    caption: "Çıkan tutar dolar",
+                },
+
+                {
+                    dataField: "bakiye_dolar",
+                    caption: "Bakiye dolar",
+                },
+            
+             
+            ],
+         
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+                toolbarItems.push({
+                    text: "Kasalar",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            window.location = "/Tanimlar/KasaKaydet ";
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                    window.location = "/Tanimlar/KasaGuncelle/"+data.id;
+                }
+            },
+
+            onCellPrepared: function (e) {
+                if (e.rowType === "data" && e.column.dataField === "girentutar_tl") {
+                    e.cellElement.css("color", "#00a30d");
+                }
+                if (e.rowType === "data" && e.column.dataField === "cikantutar_tl") {
+                    e.cellElement.css("color", "#d8002b");
+                }
+                
+                if (e.rowType === "data" && e.column.dataField === "girentutar_dolar") {
+                    e.cellElement.css("color", "#00a30d");
+                }
+                if (e.rowType === "data" && e.column.dataField === "cikantutar_dolar") {
+                    e.cellElement.css("color", "#d8002b");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+
+
+    function BlokKaydet() {
+        var blokAdi = document.getElementById("blokAdi").value;
+        var daireSayisi = document.getElementById("daireSayisi").value;
+
+
+
+        var model = {
+            blok_adi: blokAdi,
+            daire_sayisi: daireSayisi
+        };
+
+
+        if (model != null || model != '')
+        {
+            Kaydet("/Tanimlar/BlokKaydet", model,  "Kayıt işlemi başarılı", "/Tanimlar/Bloklar","İşlem sırasında bir hata meydana geldi")
+        }
+
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+    }
+
+
+    function BlokGuncelle() {
+        var blokAdiGuncelle = document.getElementById("blokAdiGuncelle").value;
+        var daireSayisi = document.getElementById("daireSayisiGuncelle").value;
+        var id = document.getElementById("id").value;
+
+        var model = {
+            blok_adi: blokAdiGuncelle,
+            daire_sayisi: daireSayisi,
+            id: id
+        };
+
+
+        if (model != null || model != '') {
+            Guncelle("/Tanimlar/BlokGuncelle", model,"Güncelleme işlemi başarılı","/Tanimlar/Bloklar", "İşlem sırasında bir hata meydana geldi")
+        }
+        else {
+            Uyari("error", "Hata meydana geldi");
+        }
+
+    }
+
+
+</script>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="kasa">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

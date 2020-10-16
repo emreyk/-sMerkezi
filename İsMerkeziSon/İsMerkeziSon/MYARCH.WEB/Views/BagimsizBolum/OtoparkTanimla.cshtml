@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "OtoparkTanimla";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using MYARCH.DTO.EEntity
+@model MYARCH.DTO.EEntity.EBagimsizBolumlerDTO
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">
+                                Otopark Tanımla
+                            </h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Bağımsız bölüm tipi</label>
+                                <div class="col-lg-10">
+                                    <select data-placeholder="Seçim yapınız" class="form-control form-control-select2" id="tip" data-fouc>
+                                        <option></option>
+                                        <optgroup label="Daire tipi">
+                                            <optgroup label="">
+                                                @foreach (ETiplerDTO tip in ViewBag.Tipler)
+                                                {
+                                                    <option value="@tip.id" @(ViewBag.TipAdi == tip.bagimsiz_tip ? "selected" : "")>@tip.bagimsiz_tip</option>
+                                                }
+                                            </optgroup>
+                                        </optgroup>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Aidat tutarı<span style="font-weight:bold">(para birimi TL)</span></label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="aidat" value="@Model.aidat_tutari" readonly>
+                                </div>
+                                <div class="col-lg-1">
+                                    <label style="font-weight:bold; line-height:35px"> TL</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Daire katsayısı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="katsayi" value="@Model.daire_katsayisi">
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="OtoparkTanimla()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+    $('select').on('change', function () {
+        var id = this.value;
+        if (id != '') {
+            $.ajax({
+                url: "/BagimsizBolum/TipeGoreAidat",
+                type: "POST",
+                data: { id: id },
+                success: function (response) {
+                    console.log(id);
+                    if (response != null) {
+                        $("#aidat").val(response);
+
+                    }
+
+                    else {
+                        Uyari("error", "Bu daire tipine ait aidat tutarı bulunamadı");
+                    }
+
+                }
+            });
+        }
+
+    });
+
+    function OtoparkTanimla() {
+
+
+        var tip = document.getElementById("tip");
+        var tipAdi = tip.options[tip.selectedIndex].text;
+        var tipId = tip.options[tip.selectedIndex].value;
+
+        if (tipId == "") {
+            Uyari("error", "Lütfen bağımsız bölüm tipini seçiniz");
+            return;
+        }
+
+        if (document.getElementById("aidat").value == '') {
+            Uyari("error", "Lütfen aidat tutarını giriniz");
+            return;
+        }
+        else {
+
+
+            var model = {
+                aidat_tutari: document.getElementById("aidat").value,
+                tip: tipAdi,
+                tip_id: tipId,
+                para_birimi: 'TL',
+                daire_katsayisi: document.getElementById("katsayi").value
+            }
+            Guncelle("/BagimsizBolum/OtoparakTanimlaIslem", model, "Kayıt işlemi başarılı", "/BagimsizBolum", "İşlem sırasında bir hata meydana geldi")
+        }
+    }
+
+</script>

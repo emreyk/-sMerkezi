@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "BorcSms";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Borçlu Kişi Sms</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Mesaj içerği</label>
+                                <div class="col-lg-10">
+                                    <textarea type="text" rows="5" class="form-control" id="smsIcerik"></textarea>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="Gonder()" class="btn btn-primary">Gönder <i class="icon-paperplane ml-2"></i></button>
+                                <button type="button" class="btn btn-danger" onclick="geriGit();">Vazgeç <i class="icon-cancel-square ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Gonder() {
+        var icerik = $("#smsIcerik").val();
+
+        if (icerik == '' || icerik == null) {
+            Uyari("error","Mesaj içeriğini giriniz");
+        }
+        else {
+            $.ajax({
+                url: "/Sms/BorcSmsKaydet",
+                type: "POST",
+                data: { icerik: icerik },
+                success: function (response) {
+                    if (response == true) {
+                        Uyari("success", "İşlem başarılı");
+                    }
+
+                    else {
+                        Uyari("error", "İşlem sırasında bir hata meydana geldi");
+
+                    }
+                }
+            })
+        }
+    }
+
+</script>

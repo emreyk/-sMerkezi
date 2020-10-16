@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "KasaGuncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model MYARCH.CORE.Entities.kasa
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header-elements-inline">
+                            <h5 class="card-title">Kasa Guncelle</h5>
+                            <div class="header-elements">
+                                <div class="list-icons">
+                                    <a class="list-icons-item" data-action="collapse"></a>
+                                    <a class="list-icons-item" data-action="reload"></a>
+                                    <a class="list-icons-item" data-action="remove"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#">
+                            <div class="form-group row" style="display:none">
+                                <label class="col-lg-2 col-form-label">Kasa adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" value="@Model.id">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Kasa adı</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="kasaAdi" value="@Model.kasa_adi">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Açılış bakiye</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="acilisBakiye" value="@Model.acilis_bakiye">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Durumu</label>
+                                <div class="col-lg-10" id="cinsiyet">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" value="True" class="form-input-styled" name="deger" @(Model.durum == "True" ? "checked" : "" ) data-fouc>
+                                            Aktif
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-input-styled" value="False" name="deger" @(Model.durum == "False" ? "checked" : "" ) data-fouc>
+                                            Pasif
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" onclick="KasaGuncelle()" class="btn btn-primary">Kaydet <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    function KasaGuncelle() {
+
+
+        var id = document.getElementById("id").value;
+        var kasaAdi = document.getElementById("kasaAdi").value;
+        var acilisBakiye = document.getElementById("acilisBakiye").value;
+        var durum = document.querySelector('input[name="deger"]:checked').value;
+
+        var model = {
+            id:id,
+            kasa_adi: kasaAdi,
+        
+            acilis_bakiye: acilisBakiye,
+            durum: durum
+        };
+
+        if (kasaAdi == '') {
+            Uyari("error", "Lütfen kasa adını giriniz");
+            return;
+        }
+    
+        if (acilisBakiye == '') {
+            Uyari("error", "Lütfen açılış bakiyesini giriniz");
+            return;
+        }
+        else {
+            Kaydet("/tanimlar/KasaGuncelleIslem", model, "kayıt işlemi başarılı", "/tanimlar/Kasa", "işlem sırasında bir hata meydana geldi");
+        }
+    }
+</script>

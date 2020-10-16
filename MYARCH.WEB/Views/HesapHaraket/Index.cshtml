@@ -1,0 +1,286 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using MYARCH.DTO.EEntity;
+@model List<EHesapHaraketDTO>
+
+<script>
+        $(function () {
+
+            
+            var borclar =  @Html.Raw(Json.Encode(Model));
+
+
+            var sontarih = "";
+            var sonOdemeTarih = "";
+
+            for (i = 0; i < borclar.length; i++) {
+
+                sontarih = moment(borclar[i]["tarih"]).format("YYYY-MM-DD");
+                sonOdemeTarih = moment(borclar[i]["sonodeme_tarihi"]).format("YYYY-MM-DD");
+
+                borclar[i]["sonTarih"] = sontarih;
+                borclar[i]["sonodeme_tarihi"] = sonOdemeTarih;
+            }
+
+        var dataGrid = $("#gridContainer").dxDataGrid({
+            dataSource: borclar,
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 15 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: { 
+                width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            filterRow: {
+                visible: true,
+                applyFilter: "auto"
+            },
+            loadPanel: {
+                enabled: true,
+
+            },
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+
+                {
+                    dataField: "kisi_id",
+                    caption: "kisiId",
+                    visible: false,
+                },
+
+                {
+                    dataField: "sonTarih",
+                    caption: "Tarih",
+                },
+                {
+                    dataField: "sonodeme_tarihi",
+                    caption: "Son ödeme tarihi",
+                },
+
+                {
+                    dataField: "isim",
+                    caption: "Kişi",
+                },
+                {
+                    dataField: "para_birimi",
+                    caption: "Para birimi",
+                },
+                {
+                    dataField: "daire_numarasi",
+                    caption: "Kapı numarası",
+                },
+
+                {
+                    dataField: "borclandirma_turu",
+                    caption: "Boçlandırma türü",
+                },
+                {
+                    dataField: "blok_adi",
+                    caption: "Blok adı",
+                },
+                {
+                    dataField: "aciklama",
+                    caption: "Açıklama",
+                },
+                {
+                    dataField: "tahsilat_durumu",
+                    caption: "Tahsilat durumu",
+                },
+                {
+                    dataField: "borc",
+                    caption: "Borç",
+                },
+                {
+                    caption: "",
+                    width: 100,
+
+                    allowFiltering: false,
+                    allowSorting: false,
+                    //cssClass: "text-center",
+                    cellTemplate: function (container, options) {
+                        $('<button type="button"  class="btn btn-info">Düzenle</button>').appendTo(container);
+                    }
+                }
+            ],
+
+     
+
+        
+
+
+
+
+            //onCellPrepared: function (e) {
+            //    if (e.rowType === "data" && e.column.dataField === "BAKIYE") {
+            //        e.cellElement.css("color", "#d82b2b");
+            //    }
+
+            //    if (e.rowType === "data" && (e.data.islem_turu == 'Tahsilat' || e.data.tahsilat_durumu == 'ödendi')) {
+
+            //        e.cellElement.find(".dx-button-danger").remove();
+            //    }
+
+            //    if (e.rowType === "data" && e.column.dataField === "tahsilat_durumu") {
+            //        if (e.data.tahsilat_durumu === 'ödendi') {
+            //            e.cellElement.css("color", "green");
+            //        }
+            //        if (e.data.tahsilat_durumu === 'ödenmedi') {
+            //            e.cellElement.css("color", "red");
+            //        }
+            //        if (e.data.tahsilat_durumu === 'eksik tahsilat') {
+            //            e.cellElement.css("color", "orange");
+            //        }
+
+            //    }
+
+            //},
+
+
+
+            onCellPrepared: function (e) {
+                if (e.rowType === "data" && e.column.dataField === "borc") {
+                    e.cellElement.css("color", "#d82b2b");
+                }
+
+                if (e.rowType === "data" && e.column.dataField === "tahsilat_durumu") {
+                    if (e.data.tahsilat_durumu === 'ödendi') {
+                        e.cellElement.css("color", "green");
+                    }
+                    if (e.data.tahsilat_durumu === 'ödenmedi') {
+                        e.cellElement.css("color", "red");
+                    }
+                    if (e.data.tahsilat_durumu === 'eksik tahsilat') {
+                        e.cellElement.css("color", "orange");
+                    }
+
+                }
+            },
+
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+                toolbarItems.push({
+                    text: "Borçlandırmalar",
+                    location: "before"
+                });
+
+                //toolbarItems.push({
+                //    widget: "dxButton",
+                //    options: {
+                //        icon: "plus",
+                //        onClick: function () {
+                //            window.location.href = "/HesapHaraket/Kaydet"; 
+                //        },
+                //        text: "Yeni",
+                //        height: 34,
+                //        width: 130,
+                //    },
+                //    location: "before"
+                //});
+            },
+
+
+            onSelectionChanged: function (selectedItems) {
+                let data = selectedItems.selectedRowsData[0];
+                if (data) {
+                   
+                    window.location.href = "/HesapHaraket/FinansalBorcDuzenle/" + data.id; 
+
+                }
+            },
+
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+                var kisiId = e.data["kisi_id"];
+                var paraBirimi = e.data["para_birimi"];
+
+                if (id != null) {
+                    $.ajax({
+                        url: "/HesapHaraket/BorcSil",
+                        type: "POST",
+                        data: { id: id, kisi_id: kisiId, para_birimi: paraBirimi },
+                        success: function (response) {
+                            if (response == "-1") {
+                                allowDeleting: false,
+                                Uyari("warning", "düzenleme yapabilmek için bu borçlandırmaya ait tahsilatları silmeniz gerekmekredir");
+                                setTimeout(function () {
+
+                                    window.location.href = "/HesapHaraket";
+                                }, 2000);
+                                return;
+                            }
+
+                            if (response == true) {
+
+                                Uyari("success", "Silme işlemi başarılı");
+                                return;
+                            }
+                            else {
+                                Uyari("error", "Hata meydana geldi");
+
+                            }
+                        }
+                    });
+                  
+                }
+                else {
+                    console.log("id değeri bulunamdı");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+            
+                <div id="gridContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

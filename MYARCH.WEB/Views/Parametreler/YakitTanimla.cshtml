@@ -1,0 +1,316 @@
+﻿
+@{
+    ViewBag.Title = "YakitTanimla";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div id="tipEkle" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Yakıt Bilgileri</h6>
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Birim ton fiyatı</label> <span style="font-weight:bold">(para birimi : @ViewBag.akaryakitParaBirimi)</span>
+                    <input type="text" class="form-control" id="birimFiyat" required>
+                </div>
+                <div class="form-group">
+                    <label>Alınan miktar</label>
+                    <input type="text" class="form-control" id="miktar">
+                </div>
+                <div class="form-group">
+                    <label>Toplam petek uzunluğu</label>
+                    <input type="text" class="form-control" id="toplamUzunluk">
+                </div>
+                <div class="form-group">
+                    <label>Tarih</label>
+                    <input type="date" class="form-control" id="tarih" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="YakitKaydet()">Kaydet</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tipGuncelleModal" class="modal fade show" tabindex="-1" style="display:none; padding-right: 17px; ">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Bağımsız Bölüm Tipi Düzenle</h6>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group" style="display:none">
+                    <label>id</label>
+                    <input type="text" class="form-control" id="id">
+                </div>
+                <div class="form-group">
+                    <label>Bağımsız bölüm tipi</label>
+                    <input type="text" class="form-control" id="bolumTipiDuzenle">
+                </div>
+                <div class="form-group">
+                    <label>Aidat tutarı</label>
+                    <input type="text" class="form-control" id="aidatTutarDuzenle">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="BagimsizBolumGuncelle()">Güncelle</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@model List<MYARCH.CORE.Entities.yakit>
+
+<script>
+    $(function () {
+
+        var tipler =  @Html.Raw(Json.Encode(Model));
+
+        var sontarih = "";
+        
+
+        for (i = 0; i < tipler.length; i++) {
+
+            sontarih = moment(tipler[i]["tarih"]).format("YYYY-MM-DD");
+         
+
+            tipler[i]["sonTarih"] = sontarih;
+         
+        }
+
+
+        var dataGrid = $("#gridContainer").dxDataGrid({
+            dataSource: tipler,
+            loadPanel: {
+                enabled: true,
+
+            },
+            keyExpr: "id",
+            showBorders: true,
+            columnAutoWidth: true,
+            hoverStateEnabled: true,
+            filterRow: { visible: false, applyFilter: "auto" },
+            paging: { pageSize: 10 },
+            showColumnLines: true,
+            rowAlternationEnabled: true,
+            selection: {
+                mode: "single"
+            },
+            searchPanel: {
+             width: 350,
+                visible: true
+            },
+            headerFilter: {
+                visible: true
+            },
+
+            //filterRow: {
+            //    visible: true,
+            //    applyFilter: "auto"
+            //},
+
+            editing: {
+                mode: "popup",
+
+                allowDeleting: true,
+
+            },
+
+            columns: [
+
+                {
+                    dataField: "id",
+                    caption: "id",
+                    visible: false,
+                },
+                {
+                    dataField: "sonTarih",
+                    caption: "Tarih",
+                },
+                {
+                    dataField: "toplam_petek_uzunluk",
+                    caption: "Toplam petek uzunluğu",
+                },
+                {
+                    dataField: "alinan_miktar",
+                    caption: "Miktar",
+                },
+                {
+                    dataField: "birim_fiyat",
+                    caption: "Birim fiyatı",
+                },
+                {
+                    dataField: "para_birimi",
+                    caption: "para_birimi",
+                },
+                {
+                    dataField: "toplam_tutar",
+                    caption: "Toplam tutar",
+                },
+             
+
+                //{
+                //    caption: "",
+                //    width: 120,
+
+                //    allowFiltering: false,
+                //    allowSorting: false,
+                //    //cssClass: "text-center",
+                //    cellTemplate: function (container, options) {
+                //        $('<button type="button"  class="btn btn-info">Düzenle</button>').appendTo(container);
+                //    }
+                //}
+
+            ],
+            summary: {
+                totalItems: [{
+                    column: "blok_adi",
+                    summaryType: "count",
+
+                },
+
+                ]
+            },
+
+            onToolbarPreparing: function (e) {
+                var toolbarItems = e.toolbarOptions.items;
+                var searchPanel = $.grep(toolbarItems, function (item) {
+                    return item.name === "searchPanel";
+                })[0];
+                searchPanel.location = "after";
+
+                toolbarItems.push({
+                    text: "Yakıt Bilgileri",
+                    location: "before"
+                });
+
+                toolbarItems.push({
+                    widget: "dxButton",
+                    options: {
+                        icon: "plus",
+                        onClick: function () {
+                            $('#tipEkle').modal('show');
+
+                        },
+                        text: "Yeni",
+                        height: 34,
+                        width: 130,
+                    },
+                    location: "before"
+                });
+            },
+
+
+         
+            onRowRemoving: function (e) {
+
+                var id = e.data["id"];
+
+                if (id != null) {
+
+                    Sil("/Tanimlar/TipSil",id,"Silme işlemi başarılı","İşlem sırasında bir hata meydana geldi")
+                }
+                else {
+                    Uyari("error", "Hata meydana geldi");
+                }
+            },
+
+
+        }).dxDataGrid("instance");
+
+
+    });
+
+
+    function YakitKaydet() {
+        var birimFiyat = document.getElementById("birimFiyat").value;
+        var miktar = document.getElementById("miktar").value;
+        var toplamPetekUzunlugu = document.getElementById("toplamUzunluk").value;
+        var tarih = document.getElementById("tarih").value;
+        var paraBirimi = '@ViewBag.akaryakitParaBirimi';
+
+        var model = {
+            birim_fiyat: birimFiyat,
+            alinan_miktar: miktar,
+            toplam_petek_uzunluk: toplamPetekUzunlugu,
+            tarih: tarih,
+            para_birimi : paraBirimi
+        };
+
+
+        if (birimFiyat == '') {
+            Uyari("error", "Birim fiyatı giriniz");
+            return;
+        }
+
+        if (miktar == '') {
+            Uyari("error", "Miktar giriniz");
+            return;
+        }
+
+        if (toplamPetekUzunlugu == '') {
+            Uyari("error", "Toplam petek uzunluğunu giriniz");
+            return;
+        }
+        else {
+            Kaydet("/Parametreler/YakitTanimlaKaydet", model, "Kayıt işlemi başarılı", "/Parametreler/YakitTanimla", "İşlem sırasında bir hata meydana geldi")
+        }
+
+    }
+
+
+    //function BagimsizBolumGuncelle() {
+
+    //    var bagimsizTipGuncelle = document.getElementById("bolumTipiDuzenle").value;
+    //    var aidatTutarGuncelle = document.getElementById("aidatTutarDuzenle").value;
+    //    var id = document.getElementById("id").value;
+
+    //    var model = {
+    //        bagimsiz_tip: bagimsizTipGuncelle,
+    //        aidat_tutar: aidatTutarGuncelle,
+    //        id: id
+    //    };
+
+
+    //    if (model != null || model != '') {
+    //        Guncelle("/Tanimlar/TipGuncelle", model, "Güncelleme işlemi başarılı","/Tanimlar/Tipler", "İşlem sırasında bir hata meydana geldi")
+    //    }
+    //    else {
+    //        Uyari("error", "Hata meydana geldi");
+    //    }
+
+
+    //}
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="demo-container">
+
+                <div id="gridContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
