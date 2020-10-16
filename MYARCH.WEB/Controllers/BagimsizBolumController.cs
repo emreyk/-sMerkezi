@@ -47,6 +47,7 @@ namespace MYARCH.WEB.Controllers
 
         public ActionResult Detay(int id, string paraBirimi)
         {
+            
             ViewBag.aidatParaBirimi = _borcTipleri.ParaBirimiAidat();
 
             var kisiler = _kisilerService.KisiListesiModal();
