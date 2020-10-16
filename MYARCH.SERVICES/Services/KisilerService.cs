@@ -257,7 +257,7 @@ namespace MYARCH.SERVICES.Services
                         
                 //        //SahinHaberlesme sms = new SahinHaberlesme();
 
-                //        //sms.gettoken("5332563356", "7304707");
+                //        
                 //        //string mesaj = "Kullanıcı adı";
                 //        //string gonMesaj = Fonksiyonlar.tr2en(mesaj);
                 //        //string gonderimzanani = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
