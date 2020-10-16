@@ -51,7 +51,7 @@ namespace MYARCH.WEB.Controllers
             try
             {
                
-                sms.gettoken("5332563356", "7304707");
+               
                 string mesaj = model.icerik;
                 string gonMesaj = Fonksiyonlar.tr2en(mesaj);
                 string gonderimzanani = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -129,7 +129,7 @@ namespace MYARCH.WEB.Controllers
         public ActionResult BorcSmsKaydet(sms model)
         {
             model.tarih = DateTime.Now.ToString("yyyy-MM-dd");
-            sms.gettoken("5332563356", "7304707");
+            
             string mesaj = model.icerik;
             string gonMesaj = Fonksiyonlar.tr2en(mesaj);
             string gonderimzanani = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
